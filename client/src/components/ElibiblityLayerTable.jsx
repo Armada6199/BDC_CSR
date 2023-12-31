@@ -17,9 +17,9 @@ function ElibiblityLayerTable({ currentLoan }) {
     <Table sx={{ minWidth: 650,}} aria-label="simple table">
       <TableHead>
 <TableRow sx={{bgcolor:'#fff'}} >
-<TableCell sx={{fontWeight:'700',}} align="left" >Loan Status</TableCell>
 <TableCell sx={{fontWeight:'700',}} align="left" >Layer</TableCell>
 <TableCell sx={{fontWeight:'700'}} align="left" >Loan Type</TableCell>
+<TableCell sx={{fontWeight:'700',}} align="left" >Loan Status</TableCell>
 <TableCell sx={{fontWeight:'700'}} align="left"> Applied Amount</TableCell>
 <TableCell sx={{fontWeight:'700'}} align="left"> Applied Interest</TableCell>
 <TableCell sx={{fontWeight:'700'}} rowSpan={2} align="left">Layer Interest Rate</TableCell>
@@ -36,9 +36,9 @@ function ElibiblityLayerTable({ currentLoan }) {
 </TableHead> */}
 <TableBody>
 <TableRow sx={{bgcolor:'#fff'}}>
-  <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} >Requested</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} rowSpan={2}>{layer.title}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{currentLoan.title}</TableCell>
+  <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} >Requested</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} >{layer.deductedAmount}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{layer.totalInterestApplied}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{layer.interestRate*100} %</TableCell>

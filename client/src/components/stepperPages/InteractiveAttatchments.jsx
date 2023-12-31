@@ -12,20 +12,22 @@ import ReactSignatureCanvas from "react-signature-canvas";
 import ClearIcon from "@mui/icons-material/Clear";
 import SaveIcon from "@mui/icons-material/Save";
 import Loader from "../Loader";
-
+import PreviewIcon from "@mui/icons-material/Preview";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
   const [pdfString, setPdfString] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [signatureState, setSignatureState] = useState("");
-  const [downloading,setDownloading ]=useState(false);
+  const [downloading, setDownloading] = useState(false);
   let sigPad = {};
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   const clear = () => sigPad.clear();
-  const blobToBase64 = blob => {
+  const blobToBase64 = (blob) => {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       reader.onloadend = () => {
         resolve(reader.result);
       };
@@ -63,7 +65,7 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
     }
   }
   async function handleDownloadDocument() {
-    setPdfString("")
+    setPdfString("");
     try {
       const downloadResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/docuDownload`,
@@ -73,14 +75,12 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
         },
         { responseType: "blob" }
       );
-   
+
       const blob = new Blob([downloadResponse.data], {
         type: "application/pdf",
       });
-      blobToBase64(blob).then(res => {
-    
-        setPdfString(res)
-       
+      blobToBase64(blob).then((res) => {
+        setPdfString(res);
       });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -103,15 +103,67 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
       <Grid
         container
         item
-        direction={"row"}
         margin={"auto"}
         sx={glassmorphismStyle}
-        maxWidth={"60%"}
-        padding={4}
-        spacing={4}
+        maxWidth={"50%"}
+        maxHeight={"75vh"}
+        overflow={"scroll"}
       >
-        <Grid container item md={12} spacing={12}>
-          <Grid item md={6}>
+        <Grid
+          width={'100%'}
+          position={"sticky"}
+          top={"0"}
+          right={"0"}
+          item
+          md={12}
+          spacing={12}
+          sx={{...glassmorphismStyle,borderBottomLeftRadius:'10px',borderBottomRightRadius:'10px',borderRadius:'0'}}
+        >
+            <Grid container justifyContent={'flex-end'} item md={12}>
+            <Grid container alignItems={'center'} item md={3}>
+            <Grid item md={4}>
+            <Button
+              sx={{
+                fontWeight: "600",
+                ":hover": { backgroundColor: "secondary.light" },
+              }}
+              startIcon={<RemoveIcon />}
+              fullWidth
+              variant="text"
+            >
+            </Button>
+            </Grid>
+            <Grid item md={4}>
+              <Typography textAlign={'center'}>100%</Typography>
+            </Grid>
+            <Grid item md={4}>
+            <Button
+              sx={{
+                fontWeight: "600",
+                ":hover": { backgroundColor: "secondary.light" },
+              }}
+              startIcon={<AddIcon />}
+              fullWidth
+              variant="text"
+            >
+            </Button>
+            </Grid>
+          </Grid>
+            <Grid item md={2}>
+            <Button
+              sx={{
+                fontWeight: "600",
+                ":hover": { backgroundColor: "secondary.light" },
+              }}
+              onClick={handleOpen}
+              startIcon={<PreviewIcon />}
+              fullWidth
+              variant="text"
+            >
+              Preview
+            </Button>
+          </Grid>
+            <Grid item md={2}>
             <Button
               sx={{
                 fontWeight: "600",
@@ -120,12 +172,12 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
               onClick={handleOpen}
               startIcon={<GestureIcon />}
               fullWidth
-              variant="outlined"
+              variant="text"
             >
               SIGN
             </Button>
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={2}>
             <Button
               fullWidth
               sx={{
@@ -134,7 +186,7 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
               }}
               onClick={handleDownloadDocument}
               startIcon={<SaveAltIcon />}
-              variant="outlined"
+              variant="text"
             >
               DOWNLOAD
             </Button>
@@ -162,7 +214,7 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
               <ReactSignatureCanvas
                 penColor="#215190"
                 ref={(ref) => {
-                  sigPad = ref;
+                  sigPad = ref; 
                 }}
                 canvasProps={{ className: "sigPad" }}
               />
@@ -201,209 +253,236 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
             </Grid>
           </Grid>
         </Modal>
-        <Grid item md={12}>
-          <Typography textAlign={"center"} fontWeight={'700'} variant="h3">
-            {currentLoan.title} Loan Agreement
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography
-            variant="h5"
-            fontWeight={'600'}
-            color={'primary.bluish'}
-            sx={{
-              marginBottom: "15px",
-              textTransform: "uppercase",
-              color: "#215190",
-            }}
-            textAlign={"center"}
-          >
-            Parties
-          </Typography>
-        </Grid>
-        {/* Lender Details */}
-        <Grid container justifyContent={'space-between'} item md={12}>
-          <Grid item md={6}>
-            <Typography
-            fontWeight={'700'}
-            variant="subtitle1"
-            >
-              Lender:
+            </Grid>
+        
+        <Grid
+          container
+          item
+          direction={"row"}
+          margin={"auto"}
+          padding={4}
+          spacing={4}
+        >
+          <Grid item md={12}>
+            <Typography textAlign={"center"} fontWeight={"700"} variant="h3">
+              {currentLoan.title} Loan Agreement
             </Typography>
           </Grid>
-          <Grid container item md={6}>
-           <Grid  item md={12}>
-           <Typography variant="subtitle1" fontWeight={500} textAlign={'end'}>Banque Du Caire</Typography>
-           </Grid>
-           <Grid item md={12}>
-           <Typography variant="subtitle1" textAlign={'end'} fontWeight={500}>Amman</Typography>
-           </Grid>
-        
-          </Grid>
-        </Grid>
-        {/* Borrower Details */}
-        <Grid container justifyContent={'space-between'} item md={12}>
-          <Grid item md={6}>
-            <Typography
-            
-            fontWeight={'700'}
-            variant="subtitle1"
-            >
-              Borrower:
-            </Typography>
-          </Grid>
-          <Grid container item md={6}>
-           <Grid  item md={12}>
-           <Typography variant="subtitle1"  fontWeight={'500'} textAlign={'end'}>{currentLoan?.formData?.employeeName}</Typography>
-           </Grid>
-           <Grid item md={12}>
-           <Typography variant="subtitle1" fontWeight={'500'} textAlign={'end'}>{currentLoan?.formData?.workPlace}</Typography>
-           </Grid>
-        
-          </Grid>
-        </Grid>
-        <Grid container item spacing={4} md={12}>
           <Grid item md={12}>
             <Typography
               variant="h5"
-              fontWeight={'600'}
-              color={'primary.bluish'}
+              fontWeight={"600"}
+              color={"primary.bluish"}
               sx={{
+                marginBottom: "15px",
                 textTransform: "uppercase",
+                color: "#215190",
               }}
               textAlign={"center"}
             >
-              Agreement
+              Parties
             </Typography>
           </Grid>
-          <Grid item md={12}>
-            <Typography variant="subtitle1" fontWeight={"500"}>
-              I, {currentLoan?.formData?.employeeName}, hereby acknowledge and
-              accept the terms outlined in the loan agreement, wherein I commit
-              to repaying the loan amount of {currentLoan.EMI} over the
-              specified period of {currentLoan.numberOfMonths} months as agreed
-              upon, making monthly payments of {currentLoan.payPerMonth.toFixed(3)}. I
-              fully understand and agree to abide by these terms and
-              obligations, and I am committed to fulfilling this financial
-              agreement within the stipulated timeframe.
-            </Typography>
+          {/* Lender Details */}
+          <Grid container justifyContent={"space-between"} item md={12}>
+            <Grid item md={6}>
+              <Typography fontWeight={"700"} variant="subtitle1">
+                Lender:
+              </Typography>
+            </Grid>
+            <Grid container item md={6}>
+              <Grid item md={12}>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={500}
+                  textAlign={"end"}
+                >
+                  Banque Du Caire
+                </Typography>
+              </Grid>
+              <Grid item md={12}>
+                <Typography
+                  variant="subtitle1"
+                  textAlign={"end"}
+                  fontWeight={500}
+                >
+                  Amman
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container spacing={4}  item md={12}>
-          <Grid item md={12}>
+          {/* Borrower Details */}
+          <Grid container justifyContent={"space-between"} item md={12}>
+            <Grid item md={6}>
+              <Typography fontWeight={"700"} variant="subtitle1">
+                Borrower:
+              </Typography>
+            </Grid>
+            <Grid container item md={6}>
+              <Grid item md={12}>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={"500"}
+                  textAlign={"end"}
+                >
+                  {currentLoan?.formData?.employeeName}
+                </Typography>
+              </Grid>
+              <Grid item md={12}>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={"500"}
+                  textAlign={"end"}
+                >
+                  {currentLoan?.formData?.workPlace}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container item spacing={4} md={12}>
             <Grid item md={12}>
               <Typography
                 variant="h5"
-                fontWeight={'600'}
-                color={'primary.bluish'}
+                fontWeight={"600"}
+                color={"primary.bluish"}
                 sx={{
                   textTransform: "uppercase",
                 }}
                 textAlign={"center"}
               >
-                Layers Details
+                Agreement
+              </Typography>
+            </Grid>
+            <Grid item md={12}>
+              <Typography variant="subtitle1" fontWeight={"500"}>
+                I, {currentLoan?.formData?.employeeName}, hereby acknowledge and
+                accept the terms outlined in the loan agreement, wherein I
+                commit to repaying the loan amount of {currentLoan.EMI} over the
+                specified period of {currentLoan.numberOfMonths} months as
+                agreed upon, making monthly payments of{" "}
+                {currentLoan.payPerMonth.toFixed(3)}. I fully understand and
+                agree to abide by these terms and obligations, and I am
+                committed to fulfilling this financial agreement within the
+                stipulated timeframe.
               </Typography>
             </Grid>
           </Grid>
-          <Grid item md={12}>
-            <ElibiblityLayerTable currentLoan={currentLoan} />
+          <Grid container spacing={4} item md={12}>
+            <Grid item md={12}>
+              <Grid item md={12}>
+                <Typography
+                  variant="h5"
+                  fontWeight={"600"}
+                  color={"primary.bluish"}
+                  sx={{
+                    textTransform: "uppercase",
+                  }}
+                  textAlign={"center"}
+                >
+                  Layers Details
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item md={12}>
+              <ElibiblityLayerTable currentLoan={currentLoan} />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container item md={12} spacing={4}>
-          <Grid item md={12}>
-            <Typography
-              variant="h5"
-              color={'primary.bluish'}
-              fontWeight={600}
-              sx={{
-                textTransform: "uppercase",
-              }}
-              textAlign={"center"}
-            >
-              Signatures
-            </Typography>
-          </Grid>
-          <Grid item md={6}>
-            <Box display={"flex"} flexDirection={"column"} gap={4}>
-              {/* Borrower's Signature */}
+          <Grid container item md={12} spacing={4}>
+            <Grid item md={12}>
               <Typography
-                variant="subtitle1"
-                fontWeight={"600"}
+                variant="h5"
+                color={"primary.bluish"}
+                fontWeight={600}
+                sx={{
+                  textTransform: "uppercase",
+                }}
                 textAlign={"center"}
               >
-                Borrower Signature
+                Signatures
               </Typography>
-              {signatureState.length > 0 ? (
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
+            </Grid>
+            <Grid item md={6}>
+              <Box display={"flex"} flexDirection={"column"} gap={4}>
+                {/* Borrower's Signature */}
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={"600"}
+                  textAlign={"center"}
                 >
-                  <img
-                    src={signatureState}
-                    style={{ width: "150px", height: "50px" }}
-                    alt="Signature"
-                  />
-                  <Typography textAlign={"center"}>
-                    _____________________{" "}
-                  </Typography>
-                </Box>
-              ) : (
-                <Box>
-                  <Button
-                    sx={{ fontWeight: "600" }}
-                    onClick={() => setOpenModal(true)}
-                    startIcon={<GestureIcon />}
-                    fullWidth
-                    variant="text"
+                  Borrower Signature
+                </Typography>
+                {signatureState.length > 0 ? (
+                  <Box
+                    display={"flex"}
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
                   >
-                    Add Signature
-                  </Button>
-                </Box>
-              )}
-            </Box>
-          </Grid>
-          <Grid item md={6}>
-            <Box display={"flex"} flexDirection={"column"} gap={4}>
-              {/* Borrower's Signature */}
-              <Typography
-                textAlign={"center"}
-                variant="subtitle1"
-                fontWeight={"600"}
-              >
-                Lender Signature
-              </Typography>
-              {signatureState.length > 0 ? (
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
+                    <img
+                      src={signatureState}
+                      style={{ width: "150px", height: "50px" }}
+                      alt="Signature"
+                    />
+                    <Typography textAlign={"center"}>
+                      _____________________{" "}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box>
+                    <Button
+                      sx={{ fontWeight: "600" }}
+                      onClick={() => setOpenModal(true)}
+                      startIcon={<GestureIcon />}
+                      fullWidth
+                      variant="text"
+                    >
+                      Add Signature
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            </Grid>
+            <Grid item md={6}>
+              <Box display={"flex"} flexDirection={"column"} gap={4}>
+                {/* Borrower's Signature */}
+                <Typography
+                  textAlign={"center"}
+                  variant="subtitle1"
+                  fontWeight={"600"}
                 >
-                  <img
-                    src={signatureState}
-                    style={{ maxWidth: "150px", height: "50px" }}
-                    alt="Signature"
-                  />
-                  <Typography textAlign={"center"}>
-                    _____________________{" "}
-                  </Typography>
-                </Box>
-              ) : (
-                <Box>
-                  <Button
-                    sx={{ fontWeight: "600" }}
-                    startIcon={<GestureIcon />}
-                    fullWidth
-                    variant="text"
-                    onClick={() => setOpenModal(true)}
+                  Lender Signature
+                </Typography>
+                {signatureState.length > 0 ? (
+                  <Box
+                    display={"flex"}
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
                   >
-                    Add Signature
-                  </Button>
-                </Box>
-              )}
-            </Box>
+                    <img
+                      src={signatureState}
+                      style={{ maxWidth: "150px", height: "50px" }}
+                      alt="Signature"
+                    />
+                    <Typography textAlign={"center"}>
+                      _____________________{" "}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box>
+                    <Button
+                      sx={{ fontWeight: "600" }}
+                      startIcon={<GestureIcon />}
+                      fullWidth
+                      variant="text"
+                      onClick={() => setOpenModal(true)}
+                    >
+                      Add Signature
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

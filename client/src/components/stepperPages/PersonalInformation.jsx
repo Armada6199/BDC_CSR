@@ -4,11 +4,12 @@ import React from "react";
 function PersonalInformation({  register, errors }) {
 
   return (
-    <Grid container item gap={4} md={12}>
-      <Grid item md={12}>
+    <Grid maxHeight={'50vh'} container spacing={4}  item   md={12}>
+      <Grid  item md={12}>
       <Typography  variant="h5" fontWeight={'600'}>Personal Information</Typography>
       </Grid>
-          <Grid container item md={12} spacing={4}>
+      <Grid container spacing={4} item md={12}>
+      <Grid container item md={12} spacing={4}>
           <Grid item md={6}>
           <Typography variant="body1" fontWeight={"600"}>
             Employee Name
@@ -121,6 +122,8 @@ function PersonalInformation({  register, errors }) {
           />
         </Grid>
        </Grid>
+      </Grid>
+      
     </Grid>
   );
 }
