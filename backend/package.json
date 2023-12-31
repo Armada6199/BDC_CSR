@@ -1,0 +1,29 @@
+{
+  "name": "bdc_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodemon": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "convert-html-to-pdf": "^1.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "express-hbs": "^2.5.0",
+    "glob": "^10.3.10",
+    "graceful-fs": "^4.2.11",
+    "handlebars": "^4.7.8",
+    "html-pdf": "^3.0.1",
+    "html-to-pdf": "^0.1.11",
+    "lodash": "^4.17.21",
+    "nodemon": "^3.0.2",
+    "readdirp": "^3.6.0"
+  }
+}

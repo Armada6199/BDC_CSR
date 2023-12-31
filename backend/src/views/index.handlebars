@@ -1,0 +1,279 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Loan Agreement</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display:
+        flex;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100%;
+
+        {
+          {
+           background-color: #f4f4f4;
+        }
+      }
+    }
+
+    .container {
+      max-width: 800px;
+      background-color: #fff;
+      padding: 30px;
+        {
+          {
+           border: 1px solid #ccc;
+        }
+      }
+
+        {
+          {
+           border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+
+    h1,
+    h2,
+    h3 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 1.5em;
+      margin-bottom:
+        15px;
+      text-transform: uppercase;
+      color: #215190;
+    }
+
+    .details {
+      display:
+        flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .details strong {
+      font-weight: bold;
+      color: #000;
+    }
+
+    .signature {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .signature .signature-label {
+      font-weight: bold;
+      color: #000;
+    }
+
+    .details {
+      display:
+        flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .details strong {
+      min-width: 120px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .signatureImg {
+      width:150px;
+      height: 50px;
+    }
+
+    .details p {
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      padding: 16px;
+      border-collapse: collapse;
+      border: 1px solid lightgray;
+      {{!-- background: rgba(255, 255, 255,
+          0.9);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter:
+        blur(11.5px);
+      -webkit-backdrop-filter: blur(11.5px);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18); --}}
+    }
+
+    table th {
+      padding: 1em;
+    }
+
+    table .layer_title {
+      text-align: left;
+      font-weight: bold;
+      color: #b0a080;
+      font-size: 17px;
+    }
+
+    table tr td {
+      padding: 1em;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>{{title}} Loan Agreement</h1>
+
+    <div class="section">
+      <h2 class="section-title">Parties</h2>
+      <div class="details">
+        <strong>Lender:</strong>
+        <div>
+          <p>Banque Du Caire</p>
+          <p>Amman</p>
+        </div>
+      </div>
+      <div class="details">
+        <strong>Borrower:</strong>
+        <div>
+          <p>{{formData.employeeName}}</p>
+          <p> {{formData.workPlace}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Loan Details</h2>
+      <div class="details">
+        <strong>Loan Name:</strong>
+        <p>{{title}}</p>
+      </div>
+      <div class="details">
+        <strong>Loan Amount:</strong>
+        <p>{{loanAmount}} JD</p>
+      </div>
+      <div class="details">
+        <strong>EMI:</strong>
+        <p>{{EMI}} JD</p>
+      </div>
+      <div class="details">
+        <strong>InterestPayable:</strong>
+        <p>{{interestPayable}} JD</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Agreement</h2>
+      <p>The lender agrees to pay the amount of
+        {{payPerMonth}}
+        JD per month for a total of
+        {{numberOfMonths}}
+        months as specified in this agreement.</p>
+    </div>
+    <div class="section">
+      <table aria-label="simple table">
+        <thead>
+          <tr>
+            <th scope="col">Loan Status</th>
+            <th scope="col">Loan Type</th>
+            <th scope="col"> Applied Amount</th>
+            <th scope="col"> Applied Interest</th>
+            <th scope="col" rowspan="2">Layer Interest
+              Rate</th>
+            <th scope="col">Range</th>
+            <th scope="col">Previous
+              Loans Deductions</th>
+          </tr>
+        </thead>
+   {{#each totalAppliedLayers as |layer index|}}
+  <thead>
+    <tr>
+      <th style="font-weight: 700; border-bottom: none; font-size: 16; color: secondary.dark;" colspan="12" align="left">
+        {{layer.title}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background-color: #fff;">
+      <td style="font-weight: 600; border: 1px solid lightgray;">Requested</td>
+      <td style="font-weight: 600; border: 1px solid lightgray;" align="center" rowspan="2">
+        {{title}}
+      </td>
+      <td style="font-weight: 600; border: 1px solid lightgray;">
+        {{layer.deductedAmount}}
+      </td>
+      <td style="font-weight: 600; border: 1px solid lightgray;" align="center" rowspan="2">
+        {{layer.totalInterestApplied}}
+      </td>
+      <td style="font-weight: 600; border: 1px solid lightgray;" align="center" rowspan="2">
+        {{layer.interestRate}}%
+      </td>
+      <td style="font-weight: 600; border: 1px solid lightgray;" align="center" rowspan="2">
+        {{layer.min}} - {{layer.max}}
+      </td>
+      <td style="font-weight: 600; border: 1px solid lightgray; color: red;" rowspan="2" align="center">
+        2000
+      </td>
+    </tr>
+    {{#each activeLoansDeductions as |activeLoan|}}
+      {{#if (eq activeLoan.activeDeductedLayer layer.title)}}
+        <tr>
+          <td style="font-weight: 600;">Active</td>
+          <td style="font-weight: 600;">
+            {{activeLoan.activeDeductedAmount}}
+          </td>
+        </tr>
+      {{/if}}
+    {{/each}}
+  </tbody>
+{{/each}}
+
+      </table>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Signatures</h2>
+      {{!-- <div class="signature">
+        <div class="signature-label">Lender's Signature:</div>
+        <div>
+          <img src="{{signatureBase64}}" class="signatureImg" alt="Singnature" />
+          <p>_________________________</p>
+        </div>
+      </div> --}}
+      <div class="signature">
+        <div class="signature-label">Borrower's Signature:</div>
+        <div>
+          {{#if signatureBase64}}
+          <img src="{{signatureBase64}}" class="signatureImg" alt="Singnature" />
+          {{/if}}
+          <p>_________________________</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>
