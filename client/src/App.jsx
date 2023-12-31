@@ -13,9 +13,10 @@ const steps = [
   "2. Loan Eligibility ",
   "3. Personal Information",
   "4. Attatchments",
+  "5. Loan Agreement"
 ];
 export default function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(3);
+  const [activeStep, setActiveStep] = React.useState(4);
   const [loans, setLoans] = React.useState(loanDetailsData);
   const [currentLoan, setCurrentLoan] = React.useState(loans[1]);
   const {
@@ -155,6 +156,7 @@ export default function HorizontalLinearStepper() {
             />
           </Grid>
         </Grid>
+   
         <Box
           sx={{ backgroundColor: "#fff", transition: "all ease-in-out 1s" }}
           width={"100%"}
@@ -163,6 +165,7 @@ export default function HorizontalLinearStepper() {
           position={"sticky"}
           bottom={"0px"}
         >
+          
           <StepperNavigationButtons
             handleBack={handleBack}
             activeStep={activeStep}

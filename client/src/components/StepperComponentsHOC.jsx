@@ -3,6 +3,7 @@ import LoanInformation from "./stepperPages/LoanInformation";
 import LoanEligibility from "./stepperPages/LoanEligibility";
 import PersonalInformation from "./stepperPages/PersonalInformation";
 import Documents from "./stepperPages/Documents";
+import InteractiveAttatchments from "./stepperPages/InteractiveAttatchments";
 
 function StepperComponentsHOC({
   activeStep,
@@ -53,6 +54,15 @@ function StepperComponentsHOC({
           errors={errors}
         />
       );
+      case 4 :
+        return (
+          <InteractiveAttatchments  
+          currentLoan={currentLoan}
+          setCurrentLoan={setCurrentLoan}
+          register={register}
+          errors={errors}
+          />
+        )
   }
 }
 

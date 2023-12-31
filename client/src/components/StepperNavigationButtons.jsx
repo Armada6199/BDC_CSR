@@ -3,6 +3,7 @@ import React from 'react'
 
 function StepperNavigationButtons({handleRest,handleBack,activeStep}) {
   return (
+  
     <Grid container sx={{zIndex:'99'}}   justifyContent={'space-between'} spacing={2} item >
     <Grid item  md={2}>
       <Button
@@ -36,6 +37,7 @@ function StepperNavigationButtons({handleRest,handleBack,activeStep}) {
       </Grid>
     </Grid>
   </Grid>
+  
   )
 }
 

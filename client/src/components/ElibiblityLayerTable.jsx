@@ -18,6 +18,7 @@ function ElibiblityLayerTable({ currentLoan }) {
       <TableHead>
 <TableRow sx={{bgcolor:'#fff'}} >
 <TableCell sx={{fontWeight:'700',}} align="left" >Loan Status</TableCell>
+<TableCell sx={{fontWeight:'700',}} align="left" >Layer</TableCell>
 <TableCell sx={{fontWeight:'700'}} align="left" >Loan Type</TableCell>
 <TableCell sx={{fontWeight:'700'}} align="left"> Applied Amount</TableCell>
 <TableCell sx={{fontWeight:'700'}} align="left"> Applied Interest</TableCell>
@@ -28,14 +29,15 @@ function ElibiblityLayerTable({ currentLoan }) {
 </TableHead>
       {totalAppliedLayers.map((layer,index)=>(
         <>
-          <TableHead >
+          {/* <TableHead >
   <TableRow >
     <TableCell sx={{fontWeight:'700',borderBottom:"none",fontSize:16,color:'secondary.dark'}}   colSpan={12} align="left">{layer.title}</TableCell>
   </TableRow>
-</TableHead>
+</TableHead> */}
 <TableBody>
 <TableRow sx={{bgcolor:'#fff'}}>
-  <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}}>Requested</TableCell>
+  <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} >Requested</TableCell>
+  <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} rowSpan={2}>{layer.title}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{currentLoan.title}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} >{layer.deductedAmount}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{layer.totalInterestApplied}</TableCell>
