@@ -52,6 +52,7 @@ function StepperComponentsHOC({
           setCurrentLoan={setCurrentLoan}
           register={register}
           errors={errors}
+          setValue={setValue}
         />
       );
       case 4 :

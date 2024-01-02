@@ -8,15 +8,16 @@ import { loanDetailsData } from "./assets/loans.jsx";
 import { useForm } from "react-hook-form";
 import calculateEMI from "./utils/utils.js";
 import StepperNavigationButtons from "./components/StepperNavigationButtons.jsx";
+import axios from "axios";
 const steps = [
   "1. Load information",
   "2. Loan Eligibility ",
   "3. Personal Information",
   "4. Attatchments",
-  "5. Loan Agreement"
+  "5. Loan Agreement",
 ];
 export default function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(4);
+  const [activeStep, setActiveStep] = React.useState(3);
   const [loans, setLoans] = React.useState(loanDetailsData);
   const [currentLoan, setCurrentLoan] = React.useState(loans[1]);
   const {
@@ -37,8 +38,33 @@ export default function HorizontalLinearStepper() {
       currentSalary_Input: currentLoan.currentSalary,
       numberOfMonths_Input: currentLoan.numberOfMonths,
       numberOfMonths_Slider: currentLoan.numberOfMonths,
+      iScoreApproval:false,
     },
   });
+  async function hanldeSubmitAttatchments() {
+    const formData=new FormData();
+    for (let i = 0; i < currentLoan.loan_attatchments.length; i++) {
+      console.log(currentLoan.loan_attatchments[i])
+      formData.append('loan_attatchments', currentLoan.loan_attatchments[i]); 
+    }
+    formData.append('employeeName',currentLoan.formData.employeeName);
+    formData.append('employeeNumber',currentLoan.formData.employeeNumber);
+    formData.append('fileNumber',currentLoan.formData.fileNumber);
+    try {
+      const postAttatchments = await axios.post(
+        `${process.env.REACT_APP_API_URL}/attatchments`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(postAttatchments);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
   function handleSetEMI() {
     let {
       loanAmount,
@@ -72,10 +98,16 @@ export default function HorizontalLinearStepper() {
       activeLoansDeductions: activeLoansDeductions,
     }));
   }
-  const handleNext = (formData) => {
+  const handleNext = async (formData) => {
     if (activeStep == 0) {
       handleSetEMI();
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    } else if (activeStep === 3) {
+      try {
+        await hanldeSubmitAttatchments();
+      } catch (error) {
+        console.log(error);
+      }
     }
     if (activeStep !== steps.length - 1 && activeStep !== 0) {
       setCurrentLoan((prev) => ({ ...prev, formData }));
@@ -99,7 +131,7 @@ export default function HorizontalLinearStepper() {
   return (
     <form noValidate onSubmit={handleSubmit(handleNext)}>
       <Grid container minHeight={"100vh"} bgcolor={"background.default"}>
-        <Grid container minHeight={"20vh"}  item md={12} p={4} gap={2}>
+        <Grid container minHeight={"20vh"} item md={12} p={4} gap={2}>
           <Typography variant="h4">Apply Loan</Typography>
           <Grid item md={12} sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep}>
@@ -142,7 +174,7 @@ export default function HorizontalLinearStepper() {
             </Stepper>
           </Grid>
         </Grid>
-        <Grid container item p={4} minHeight={"75vh"}  gap={4} bgcolor={"#fff"}>
+        <Grid container item p={4} minHeight={"75vh"} gap={4} bgcolor={"#fff"}>
           <Grid container item md={12}>
             <StepperComponentsHOC
               currentLoan={currentLoan}
@@ -156,7 +188,7 @@ export default function HorizontalLinearStepper() {
             />
           </Grid>
         </Grid>
-   
+
         <Box
           sx={{ backgroundColor: "#fff", transition: "all ease-in-out 1s" }}
           width={"100%"}
@@ -165,7 +197,6 @@ export default function HorizontalLinearStepper() {
           position={"sticky"}
           bottom={"0px"}
         >
-          
           <StepperNavigationButtons
             handleBack={handleBack}
             activeStep={activeStep}

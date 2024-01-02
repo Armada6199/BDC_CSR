@@ -1,29 +1,22 @@
 import React, { useEffect, useState } from "react";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ElibiblityLayerTable from "../ElibiblityLayerTable";
 import { Button, Grid, Modal } from "@mui/material";
 import { glassmorphismStyle } from "../../assets/styles";
 import axios from "axios";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import GestureIcon from "@mui/icons-material/Gesture";
-import ReactSignatureCanvas from "react-signature-canvas";
-import ClearIcon from "@mui/icons-material/Clear";
-import SaveIcon from "@mui/icons-material/Save";
 import Loader from "../Loader";
-import PreviewIcon from "@mui/icons-material/Preview";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
-  const [pdfString, setPdfString] = useState("");
-  const [openModal, setOpenModal] = useState(false);
+import DocumentToolbar from "../../DocumentToolbar";
+const InteractiveAttatchments = ({ currentLoan }) => {
+  const [pdfString, setPdfString] = useState("f");
   const [signatureState, setSignatureState] = useState("");
   const [downloading, setDownloading] = useState(false);
-  let sigPad = {};
+  const [zoomState, setZoomState] = useState(100);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
-  const clear = () => sigPad.clear();
+  const [openModal, setOpenModal] = useState(false);
+
   const blobToBase64 = (blob) => {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
@@ -34,17 +27,17 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
     });
   };
   // const save=()=>setSignatureState(sigPad.getTrimmedCanvas().toBase64())
-  useEffect(() => {
-    const postData = async () => {
-      const documentPost = await axios.post(
-        `${process.env.REACT_APP_API_URL}/loan`,
-        currentLoan
-      );
-      setPdfString(documentPost.data);
-    };
-    postData();
-  }, []);
-  async function handleAddSignature() {
+  // useEffect(() => {
+  //   const postData = async () => {
+  //     const documentPost = await axios.post(
+  //       `${process.env.REACT_APP_API_URL}/loan`,
+  //       currentLoan
+  //     );
+  //     setPdfString(documentPost.data);
+  //   };
+  //   postData();
+  // }, []);
+  async function handleAddSignature(sigPad) {
     setSignatureState(sigPad.getTrimmedCanvas().toDataURL());
     setPdfString("");
     try {
@@ -97,6 +90,8 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
       console.log(error);
     }
   }
+  const increaseZoom=()=>(setZoomState(prev=>prev+25));
+  const decreaseZoom=()=>(setZoomState(prev=>prev-25));
 
   return pdfString.length > 0 ? (
     <>
@@ -104,157 +99,22 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
         container
         item
         margin={"auto"}
-        sx={glassmorphismStyle}
-        maxWidth={"50%"}
-        maxHeight={"75vh"}
+        sx={{glassmorphismStyle}}
+        maxHeight={"65vh"}
         overflow={"scroll"}
-      >
-        <Grid
-          width={'100%'}
-          position={"sticky"}
-          top={"0"}
-          right={"0"}
-          item
-          md={12}
-          spacing={12}
-          sx={{...glassmorphismStyle,borderBottomLeftRadius:'10px',borderBottomRightRadius:'10px',borderRadius:'0'}}
         >
-            <Grid container justifyContent={'flex-end'} item md={12}>
-            <Grid container alignItems={'center'} item md={3}>
-            <Grid item md={4}>
-            <Button
-              sx={{
-                fontWeight: "600",
-                ":hover": { backgroundColor: "secondary.light" },
-              }}
-              startIcon={<RemoveIcon />}
-              fullWidth
-              variant="text"
-            >
-            </Button>
-            </Grid>
-            <Grid item md={4}>
-              <Typography textAlign={'center'}>100%</Typography>
-            </Grid>
-            <Grid item md={4}>
-            <Button
-              sx={{
-                fontWeight: "600",
-                ":hover": { backgroundColor: "secondary.light" },
-              }}
-              startIcon={<AddIcon />}
-              fullWidth
-              variant="text"
-            >
-            </Button>
-            </Grid>
-          </Grid>
-            <Grid item md={2}>
-            <Button
-              sx={{
-                fontWeight: "600",
-                ":hover": { backgroundColor: "secondary.light" },
-              }}
-              onClick={handleOpen}
-              startIcon={<PreviewIcon />}
-              fullWidth
-              variant="text"
-            >
-              Preview
-            </Button>
-          </Grid>
-            <Grid item md={2}>
-            <Button
-              sx={{
-                fontWeight: "600",
-                ":hover": { backgroundColor: "secondary.light" },
-              }}
-              onClick={handleOpen}
-              startIcon={<GestureIcon />}
-              fullWidth
-              variant="text"
-            >
-              SIGN
-            </Button>
-          </Grid>
-          <Grid item md={2}>
-            <Button
-              fullWidth
-              sx={{
-                fontWeight: "600",
-                ":hover": { backgroundColor: "secondary.light" },
-              }}
-              onClick={handleDownloadDocument}
-              startIcon={<SaveAltIcon />}
-              variant="text"
-            >
-              DOWNLOAD
-            </Button>
-          </Grid>
-        </Grid>
-        <Modal
-          open={openModal}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            border: "none",
-          }}
-        >
-          <Grid sx={glassmorphismStyle} container spacing={4} p={4} item md={6}>
-            <Grid item md={12}>
-              <Typography variant="h6" textAlign={"center"}>
-                Kindly Add Your Signature
-              </Typography>
-            </Grid>
-            <Grid container className="sigContainer" item md={12}>
-              <ReactSignatureCanvas
-                penColor="#215190"
-                ref={(ref) => {
-                  sigPad = ref; 
-                }}
-                canvasProps={{ className: "sigPad" }}
-              />
-            </Grid>
-            <Grid container item md={12} spacing={4}>
-              <Grid item md={6}>
-                <Button
-                  onClick={clear}
-                  sx={{
-                    color: "#215190",
-                    fontWeight: "700",
-                    borderColor: "#215190",
-                  }}
-                  startIcon={<ClearIcon />}
-                  fullWidth
-                  variant="outlined"
-                >
-                  Clear
-                </Button>
-              </Grid>
-              <Grid item md={6}>
-                <Button
-                  onClick={() => handleAddSignature()}
-                  sx={{
-                    fontWeight: "600",
-                    bgcolor: "#C4B28F",
-                    color: "primary.main",
-                  }}
-                  startIcon={<SaveIcon />}
-                  fullWidth
-                  variant="contained"
-                >
-                  Save
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Modal>
-            </Grid>
-        
+        <DocumentToolbar
+          handleAddSignature={handleAddSignature}
+          handleDownloadDocument={handleDownloadDocument}
+          zoomState={zoomState}
+          increaseZoom={increaseZoom}
+          decreaseZoom={decreaseZoom}
+          pdfString={pdfString}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          openModal={openModal}
+        />
+
         <Grid
           container
           item
@@ -262,6 +122,7 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
           margin={"auto"}
           padding={4}
           spacing={4}
+          sx={{zoom:zoomState/100}}
         >
           <Grid item md={12}>
             <Typography textAlign={"center"} fontWeight={"700"} variant="h3">
@@ -385,7 +246,7 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
             </Grid>
             <Grid item md={12}>
               <ElibiblityLayerTable currentLoan={currentLoan} />
-            </Grid>
+            </Grid> 
           </Grid>
           <Grid container item md={12} spacing={4}>
             <Grid item md={12}>
@@ -431,7 +292,7 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
                   <Box>
                     <Button
                       sx={{ fontWeight: "600" }}
-                      onClick={() => setOpenModal(true)}
+                      onClick={handleOpen}
                       startIcon={<GestureIcon />}
                       fullWidth
                       variant="text"
@@ -475,7 +336,7 @@ const InteractiveAttatchments = ({ currentLoan, signatureBase64 }) => {
                       startIcon={<GestureIcon />}
                       fullWidth
                       variant="text"
-                      onClick={() => setOpenModal(true)}
+                      onClick={handleOpen}
                     >
                       Add Signature
                     </Button>

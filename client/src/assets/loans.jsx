@@ -42,6 +42,7 @@ export const loanDetailsData = [
     minMonths: 12,
     maxMonths: 300,
     hasPrevLoan: false,
+    loan_attatchments:[],
     activeLoans: [
       { activeLoanAmount: null, activeLoanLayer: null, activeLoanType: null },
     ],
@@ -94,6 +95,7 @@ export const loanDetailsData = [
     totalInterest: 0,
     normalDBR: 0.5,
     socialSecurityDBR: 0.6,
+    loan_attatchments:[],
     activeLoans: [
       { activeLoanAmount: null, activeLoanLayer: null, activeLoanType: null },
     ],
@@ -152,6 +154,7 @@ export const loanDetailsData = [
     socialSecurityDBR: 0.6,
     totalAppliedLayers: [],
     activeLoansDeductions:[],
+    loan_attatchments:[],
  maxAmountAfterDeduction:0,    
  loadIcon: (props) => <DirectionsCarFilledOutlinedIcon sx={props} />,
   },
@@ -238,6 +241,7 @@ export const loanDetailsData = [
     socialSecurityDBR: 0.6,
     activeLoansDeductions:[],
     maxAmountAfterDeduction:0,
+    loan_loan_attatchments:[],
         activeLoans: [
       { activeLoanAmount: null, activeLoanLayer: null, activeLoanType: null },
     ],

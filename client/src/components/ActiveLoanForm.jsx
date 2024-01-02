@@ -57,8 +57,8 @@ function ActiveLoanForm({
     }
   }
   return (
-    <Grid container item md={12} spacing={4} >
-      <Grid item sm={12} md={3}>
+    <Grid container item md={12} spacing={2} >
+      <Grid item sm={12} md={6} xl={3}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">
             Current Loan Type
@@ -68,7 +68,6 @@ function ActiveLoanForm({
             label="Loan Type"
             {...register(`activeLoanType${index}`)}
             onChange={(e) => handleLoanInputChange(e)}
-            value={currentLoan.activeLoans[index].activeLoanType}
           >
             <MenuItem value={"Home Loan"}>Home Loan</MenuItem>
             <MenuItem value={"Land Loan"}>Land Loan</MenuItem>
@@ -77,7 +76,7 @@ function ActiveLoanForm({
           </Select>
         </FormControl>
       </Grid>
-      <Grid item sm={12} md={3}>
+      <Grid item sm={12} md={6} xl={3 }>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">
             Current Loan Layer
@@ -97,12 +96,12 @@ function ActiveLoanForm({
           </Select>
         </FormControl>
       </Grid>
-      <Grid item sm={12} md={3}>
+      <Grid item sm={12} md={4} xl={2}>
         <TextField
           sx={loanInfoInputStyle}
           fullWidth
-          id="activeLoanAmountInput"
-          label={"Left Amount"}
+          id="activeLoanPayPerMonthInput"
+          label={"Pay Per Month"}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -110,7 +109,7 @@ function ActiveLoanForm({
               </InputAdornment>
             ),
           }}
-          {...register(`activeLoanAmount${index}`)}
+          {...register(`activeLoanPayPerMonthInput${index}`)}
           onChange={(e) => {
             handleChangeMaxLoanAmount(e);
             handleLoanInputChange(e)}}
@@ -125,7 +124,35 @@ function ActiveLoanForm({
           disabled={activeLoan.activeLoanLayer ? false : true}
         />
       </Grid>
-      <Grid container item justifyContent={'flex-end'} spacing={4} sm={12}  md={3}>
+      <Grid item sm={12} md={4} xl={2} >
+        <TextField
+          sx={loanInfoInputStyle}
+          fullWidth
+          id="activeLoanLeftMonths"
+          label={"Left Months"}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <EditIcon sx={{ color: "#C4B28F" }} />
+              </InputAdornment>
+            ),
+          }}
+          {...register(`activeLoanLeftMonths${index}`)}
+          onChange={(e) => {
+            handleChangeMaxLoanAmount(e);
+            handleLoanInputChange(e)}}
+          type="number"
+          // inputProps={{
+          //   min: ,
+          //   max: currentLoan.maxMonths,
+          //   defaultValue: currentLoan.maxMonths / 2,
+          // }}
+          value={currentLoan.activeLoans[index].activeLoanAmount}
+          variant="outlined"
+          disabled={activeLoan.activeLoanLayer ? false : true}
+        />
+      </Grid>
+      <Grid container item   sm={12}  md={4} xl={2}>
         <Grid item md={6}>
           <Box
             sx={{
@@ -148,7 +175,7 @@ function ActiveLoanForm({
             <AddIcon sx={{ fontSize: 42, color: "#C4B28F" }} />
           </Box>
         </Grid>
-          <Grid item sx={{ cursor: "pointer" }} onClick={()=> index===0&&setCurrentLoan({
+          <Grid   item   sx={{ cursor: "pointer" }} onClick={()=> index===0&&setCurrentLoan({
                   ...currentLoan,
                   hasPrevLoan:false,
                 })}   md={6}>

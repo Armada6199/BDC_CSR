@@ -1,12 +1,12 @@
 .sigContainer {
     width: 100%;
-    height: 80%;
+    height: 100%;
     margin: 0 auto;
     background-color: #fff;
   }
   .sigPad {
     width: 100%;
-    height: 200px;
+    min-height: 250px;
     border: 1px solid lightgray;
     border-radius: 10px;
   }
