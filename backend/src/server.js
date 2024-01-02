@@ -4,6 +4,8 @@ const loanRouter = require("./routes/loanRoute");
 const cors = require("cors");
 const path = require("path");
 const {engine} = require('express-handlebars');
+// const fileUpload = require('express-fileupload');
+
 app.engine('handlebars', engine({
   extname: "handlebars",
   defaultLayout: false,
@@ -20,7 +22,7 @@ app.use(
     origin: "*",
   })
 );
-
+// app.use(fileUpload());
 app.use(express.json());
 app.get("/", (req, res) => {
 });
