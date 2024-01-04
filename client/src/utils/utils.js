@@ -66,7 +66,6 @@ export default function calculateEMI(
       }
       //loan amount is less than the max
       else {
-        console.log(rate);
         layerInterest = calculateLayerInterest(
           loanAmount,
           rate.interestRate,
@@ -115,12 +114,13 @@ function handleCalculateActiveLoans(
       activeLoan.activeLoanType === currentLoanTitle &&
       layer.title === activeLoan.activeLoanLayer
     ) {
+      const leftLoanAmount=activeLoan.activeLoanPayPerMonthInput*activeLoan.activeLoanLeftMonths
       newDeductions.push({
         activeDeductedType: currentLoanTitle,
-        activeDeductedAmount: activeLoan.activeLoanAmount,
+        activeDeductedAmount: leftLoanAmount,
         activeDeductedLayer: layer.title,
       });
-      return { newMax: layer.max - activeLoan.activeLoanAmount, newDeductions };
+      return { newMax: layer.max - leftLoanAmount, newDeductions };
     }
   }
   // console.log(layer)

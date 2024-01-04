@@ -48,6 +48,7 @@ function CurrentSalarySlider({
                   message: 'Minimum Eligible Salary is 250 JD', 
                 },
             })} 
+            disabled={currentLoan.isStaff}
             type="number"
             step={50}
             inputProps={{
@@ -73,6 +74,7 @@ function CurrentSalarySlider({
                 : "Kindly Choose Salary amount",
                 onChange: (e) => handleSliderChange(e),
             })}
+            disabled={currentLoan.isStaff}
             value={
                 currentLoan.currentSalary ? currentLoan.currentSalary : 150_00 / 2
             }

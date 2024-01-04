@@ -101,6 +101,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
         margin={"auto"}
         sx={{glassmorphismStyle}}
         maxHeight={"65vh"}
+        // width={'65vw'}
         overflow={"scroll"}
         >
         <DocumentToolbar
@@ -122,6 +123,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
           margin={"auto"}
           padding={4}
           spacing={4}
+          width={'60vw'}
           sx={{zoom:zoomState/100}}
         >
           <Grid item md={12}>

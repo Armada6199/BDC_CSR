@@ -14,6 +14,7 @@ import { loanInfoInputStyle } from "../assets/styles";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { CSSTransition,T } from "react-transition-group";
 function ActiveLoanForm({
   register,
   currentLoan,
@@ -54,13 +55,17 @@ function ActiveLoanForm({
       const newActiveLoans = currentLoan.activeLoans;
       newActiveLoans.splice(index, 1);
       setCurrentLoan((prev) => ({ ...prev, activeLoans: newActiveLoans }));
-    }
+    }else {
+      index===0&&setCurrentLoan({
+        ...currentLoan,
+        hasPrevLoan:false,
+      })}
   }
   return (
     <Grid container item md={12} spacing={2} >
       <Grid item sm={12} md={6} xl={3}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">
+          <InputLabel >
             Current Loan Type
           </InputLabel>
           <Select
@@ -68,6 +73,8 @@ function ActiveLoanForm({
             label="Loan Type"
             {...register(`activeLoanType${index}`)}
             onChange={(e) => handleLoanInputChange(e)}
+            value={currentLoan.activeLoans[index].activeLoanType}
+            disabled={currentLoan.isStaff}
           >
             <MenuItem value={"Home Loan"}>Home Loan</MenuItem>
             <MenuItem value={"Land Loan"}>Land Loan</MenuItem>
@@ -78,7 +85,7 @@ function ActiveLoanForm({
       </Grid>
       <Grid item sm={12} md={6} xl={3 }>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">
+          <InputLabel >
             Current Loan Layer
           </InputLabel>
           <Select
@@ -87,7 +94,7 @@ function ActiveLoanForm({
             {...register(`activeLoanLayer${index}`)}
             onChange={(e) => handleLoanInputChange(e)}
             value={currentLoan.activeLoans[index].activeLoanLayer}
-            disabled={activeLoan.activeLoanType ? false : true}
+            disabled={currentLoan.isStaff?true:activeLoan.activeLoanType ? false : true}
           >
             <MenuItem value={"First Layer"}>First Layer</MenuItem>
             <MenuItem value={"Second Layer"}>Second Layer</MenuItem>
@@ -119,9 +126,9 @@ function ActiveLoanForm({
           //   max: currentLoan.maxMonths,
           //   defaultValue: currentLoan.maxMonths / 2,
           // }}
-          value={currentLoan.activeLoans[index].activeLoanAmount}
+          value={currentLoan.activeLoans[index].activeLoanPayPerMonthInput}
           variant="outlined"
-          disabled={activeLoan.activeLoanLayer ? false : true}
+          disabled={currentLoan.isStaff?true:activeLoan.activeLoanLayer ? false : true}
         />
       </Grid>
       <Grid item sm={12} md={4} xl={2} >
@@ -147,9 +154,9 @@ function ActiveLoanForm({
           //   max: currentLoan.maxMonths,
           //   defaultValue: currentLoan.maxMonths / 2,
           // }}
-          value={currentLoan.activeLoans[index].activeLoanAmount}
+          value={currentLoan.activeLoans[index].activeLoanLeftMonths}
           variant="outlined"
-          disabled={activeLoan.activeLoanLayer ? false : true}
+          disabled={currentLoan.isStaff?true:activeLoan.activeLoanLayer ? false : true}
         />
       </Grid>
       <Grid container item   sm={12}  md={4} xl={2}>
@@ -166,19 +173,18 @@ function ActiveLoanForm({
               cursor: "pointer",
             }}
             onClick={() =>
+              activeLoan.activeLoanLeftMonths &&
               activeLoan.activeLoanLayer &&
-              activeLoan.activeLoanAmount &&
-              activeLoan.activeLoanType &&
+              activeLoan.activeLoanPayPerMonthInput &&
+              activeLoan.activeLoanType&&
+              !currentLoan.isStaff&&
               handleAddNewLoan()
             }
           >
             <AddIcon sx={{ fontSize: 42, color: "#C4B28F" }} />
           </Box>
         </Grid>
-          <Grid   item   sx={{ cursor: "pointer" }} onClick={()=> index===0&&setCurrentLoan({
-                  ...currentLoan,
-                  hasPrevLoan:false,
-                })}   md={6}>
+          <Grid   item   sx={{ cursor: "pointer" }} onClick={()=> currentLoan.isStaff?null:handleDeleteActiveLoan()}   md={6}>
             <Box
               sx={{
                 display: "flex",
@@ -190,7 +196,6 @@ function ActiveLoanForm({
                 backgroundColor: "#EAEAEA",
                 cursor: "pointer",
               }}
-              onClick={() => handleDeleteActiveLoan()}
             >
               <DeleteIcon sx={{ fontSize: 42, color: "#C4B28F" }} />
             </Box>

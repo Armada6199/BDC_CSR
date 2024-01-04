@@ -1,7 +1,8 @@
 import { Grid, TextField, Typography } from "@mui/material";
 import React from "react";
+import CustomDatePicker from "../CustomDatePicker";
 
-function PersonalInformation({  register, errors }) {
+function PersonalInformation({  register, errors,currentLoan }) {
 
   return (
     <Grid maxHeight={'50vh'} container spacing={4}  item   md={12}>
@@ -16,6 +17,7 @@ function PersonalInformation({  register, errors }) {
           </Typography>
           <TextField
           fullWidth
+          disabled={currentLoan.isStaff}
             error={!!errors.employeeName}
             helperText={errors.employeeName?.message}
             {...register("employeeName", {
@@ -29,6 +31,8 @@ function PersonalInformation({  register, errors }) {
           </Typography>
           <TextField
           fullWidth
+          type="number"
+          disabled={currentLoan.isStaff}
             error={!!errors.fileNumber}
             helperText={errors.fileNumber?.message}
             {...register("fileNumber", {
@@ -44,6 +48,7 @@ function PersonalInformation({  register, errors }) {
           </Typography>
           <TextField
           fullWidth
+          disabled={currentLoan.isStaff}
           error={!!errors.jobTitle}
             helperText={errors.jobTitle?.message}
             {...register("jobTitle", {
@@ -55,14 +60,7 @@ function PersonalInformation({  register, errors }) {
           <Typography variant="body1" fontWeight={"600"}>
             Joining Date
           </Typography>
-          <TextField
-            fullWidth
-            error={!!errors.joiningDate}
-            joiningDate={errors.joiningDate?.message}
-            {...register("joiningDate", {
-              required: "This field is required",
-            })}
-          />
+          <CustomDatePicker value={currentLoan.joiningDate} disabled={currentLoan.isStaff}/>
         </Grid>
             </Grid>
         
@@ -73,6 +71,7 @@ function PersonalInformation({  register, errors }) {
           </Typography>
           <TextField
           fullWidth
+          disabled={currentLoan.isStaff}
           error={!!errors.employeeLevel}
             helperText={errors.employeeLevel?.message}
             {...register("employeeLevel", {
@@ -86,6 +85,7 @@ function PersonalInformation({  register, errors }) {
           </Typography>
           <TextField
           fullWidth
+          disabled={currentLoan.isStaff}
           error={!!errors.jobLevel}
             helperText={errors.jobLevel?.message}
             {...register("jobLevel", {
@@ -101,6 +101,8 @@ function PersonalInformation({  register, errors }) {
           </Typography>
           <TextField
           fullWidth
+          type="number"
+          disabled={currentLoan.isStaff}
           error={!!errors.employeeNumber}
             helperText={errors.employeeNumber?.message}
             {...register("employeeNumber", {
@@ -114,6 +116,7 @@ function PersonalInformation({  register, errors }) {
           </Typography>
           <TextField
           fullWidth
+          disabled={currentLoan.isStaff}
           error={!!errors.workPlace}
             helperText={errors.workPlace?.message}
             {...register("workPlace", {

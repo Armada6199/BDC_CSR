@@ -104,7 +104,7 @@ function LoanEligibility({ currentLoan, setCurrentLoan }) {
           <ElibiblityLayerTable currentLoan={currentLoan} />
         </Grid>
       </Grid>
-      <Grid p={4} container item justifyContent={"flex-start"} md={4} gap={12}>
+      <Grid p={4} container item justifyContent={"flex-start"} md={4} gap={4}>
         <Grid
           container
           sx={glassmorphismStyle}

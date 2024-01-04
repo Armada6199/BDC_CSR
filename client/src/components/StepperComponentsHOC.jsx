@@ -13,7 +13,10 @@ function StepperComponentsHOC({
   register,
   errors,
   setValue,
-  handleSetEMI
+  handleSetEMI,
+  uploadProgress,
+  hanldeSubmitAttatchments,
+  setUploadProgress
 }) {
   switch (activeStep) {
     case 0:
@@ -53,6 +56,9 @@ function StepperComponentsHOC({
           register={register}
           errors={errors}
           setValue={setValue}
+          hanldeSubmitAttatchments={hanldeSubmitAttatchments}
+          uploadProgress={uploadProgress}
+          setUploadProgress={setUploadProgress}
         />
       );
       case 4 :

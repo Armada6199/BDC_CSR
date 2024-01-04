@@ -16,6 +16,9 @@ import CurrentSalarySlider from "../loansSlider/CurrentSalarySlider";
 import MonthsSlider from "../loansSlider/MonthsSlider";
 import AmountSlider from "../loansSlider/AmountSlider";
 import calculateEMI from "../../utils/utils";
+import '../../assets/styles.css'
+
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 function LoanInformation({
   currentLoan,
   setCurrentLoan,
@@ -31,9 +34,9 @@ function LoanInformation({
     name = name.split("_")[0];
     setCurrentLoan((prev) => ({ ...prev, [name]: value }));
   };
-  useEffect(()=>{
-    setCurrentLoan(prev=>({...prev}))
-  },[])
+  useEffect(() => {
+    setCurrentLoan((prev) => ({ ...prev }));
+  }, []);
   const validateGreaterThanSalary = (value, type) => {
     let {
       loanAmount,
@@ -54,24 +57,24 @@ function LoanInformation({
       totalAmount += totalInterests;
       const isEligible = payPerMonth <= currentSalary / 2;
       const halfSalary = currentSalary / 2;
-          if (isEligible) {
-            return true;
-          } else {
-            for (let i = numberOfMonths; i < maxMonths; i++) {
-              if (totalAmount / i <= halfSalary) {
-                console.log(
-                  `found pay per month is ${i} and amount is ${
-                    totalAmount / i
-                  } for loan amount of${totalAmount} and half of your salary is ${
-                    currentSalary / 2
-                  }`
-                );
-                return `Minimum Term For your request is ${i}`;
-              }
-            }
+      if (isEligible) {
+        return true;
+      } else {
+        for (let i = numberOfMonths; i < maxMonths; i++) {
+          if (totalAmount / i <= halfSalary) {
+            console.log(
+              `found pay per month is ${i} and amount is ${
+                totalAmount / i
+              } for loan amount of${totalAmount} and half of your salary is ${
+                currentSalary / 2
+              }`
+            );
+            return `Minimum Term For your request is ${i}`;
           }
-          return "You Arent Eligiable for this Amount";
         }
+      }
+      return "You Arent Eligiable for this Amount";
+    }
   };
   return (
     <Grid container alignItems={"flex-start"} spacing={10}>
@@ -119,9 +122,10 @@ function LoanInformation({
             />
           </Grid>
         </Grid>
-        <Grid container item md={10}  lg={12}>
+        <Grid container item md={10} lg={12}>
           <FormControl
             fullWidth
+            disabled={currentLoan.isStaff}
             error={errors.isCurrentLoan?.message ? true : false}
           >
             <FormLabel id="demo-radio-buttons-group-label">
@@ -129,19 +133,16 @@ function LoanInformation({
             </FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue={'no'}
-              value={currentLoan.hasPrevLoan?'yes':'no'}
+              defaultValue={"no"}
+              value={currentLoan.hasPrevLoan ? "yes" : "no"}
               name="currentLoan"
               row
-              onChange={(e) =>
-                {
-                  setCurrentLoan({
-                    ...currentLoan,
-                    hasPrevLoan: e.target.value == "yes" ? true : false,
-                  })
-                }
-              
-              }
+              onChange={(e) => {
+                setCurrentLoan({
+                  ...currentLoan,
+                  hasPrevLoan: e.target.value == "yes" ? true : false,
+                });
+              }}
             >
               <Grid item md={2}>
                 <FormControlLabel
@@ -149,7 +150,9 @@ function LoanInformation({
                   control={
                     <Radio
                       {...register("isCurrentLoan", {
-                        required: "current Loan amount",
+                        required: currentLoan.isStaff
+                          ? false
+                          : "current Loan amount",
                       })}
                       sx={{
                         color: "#215190",
@@ -170,7 +173,9 @@ function LoanInformation({
                     <Radio
                       size="small"
                       {...register("isCurrentLoan", {
-                        required: "This field is required",
+                        required: currentLoan.isStaff
+                          ? false
+                          : "current Loan amount",
                       })}
                       sx={{
                         color: "#215190",
@@ -188,17 +193,17 @@ function LoanInformation({
           </FormControl>
         </Grid>
         {currentLoan.hasPrevLoan && (
-          <Grid container item  minHeight={"120px"} gap={4}  md={12} >
-            {currentLoan.activeLoans.map((activeLoan, index) => (
-              <ActiveLoanForm
-                key={index}
-                index={index}
-                activeLoan={activeLoan}
-                register={register}
-                currentLoan={currentLoan}
-                setCurrentLoan={setCurrentLoan}
-              />
-            ))}
+          <Grid container item minHeight={"140px"} gap={6}  md={12}>
+              {currentLoan.activeLoans.map((activeLoan, index) => (
+                  <ActiveLoanForm
+                  key={index}
+                    index={index}
+                    activeLoan={activeLoan}
+                    register={register}
+                    currentLoan={currentLoan}
+                    setCurrentLoan={setCurrentLoan}
+                  />
+              ))}
           </Grid>
         )}
       </Grid>

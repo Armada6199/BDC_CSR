@@ -24,7 +24,7 @@ function ElibiblityLayerTable({ currentLoan }) {
 <TableCell sx={{fontWeight:'700'}} align="left"> Applied Interest</TableCell>
 <TableCell sx={{fontWeight:'700'}} rowSpan={2} align="left">Layer Interest Rate</TableCell>
 <TableCell sx={{fontWeight:'700'}} align="left">Range</TableCell>
-<TableCell sx={{fontWeight:'700'}} align="left">Previous Loans Deductions</TableCell>
+{/* <TableCell sx={{fontWeight:'700'}} align="left">Previous Loans Deductions</TableCell> */}
 </TableRow>
 </TableHead>
       {totalAppliedLayers.map((layer,index)=>(
@@ -43,13 +43,13 @@ function ElibiblityLayerTable({ currentLoan }) {
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{layer.totalInterestApplied}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{layer.interestRate*100} %</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{`${layer.min} - ${layer.max}`}</TableCell>
-  <TableCell sx={{fontWeight:'600',border:'1px solid lightgray',color:layerDeductionSum[layer.title]?'red':''}} rowSpan={2} align="center">{layerDeductionSum[layer.title]?layerDeductionSum[layer.title]:'0'} JD</TableCell>
+  {/* <TableCell sx={{fontWeight:'600',border:'1px solid lightgray',color:layerDeductionSum[layer.title]?'red':''}} rowSpan={2} align="center">{layerDeductionSum[layer.title]?layerDeductionSum[layer.title]:'0'} JD</TableCell> */}
 </TableRow>
-{activeLoansDeductions.map(activeLoan=>(
+{activeLoansDeductions.map(activeLoan=>(  
   activeLoan.activeDeductedLayer==layer.title&&
   <TableRow >
   <TableCell sx={{fontWeight:'600',}}>Active</TableCell>
-  <TableCell sx={{fontWeight:'600'}}>{activeLoan.activeDeductedAmount}</TableCell>
+  <TableCell sx={{fontWeight:'600',color:'red',border:'1px solid lightgray'}}>{activeLoan.activeDeductedAmount}</TableCell>
 </TableRow>
 ))}
 </TableBody>

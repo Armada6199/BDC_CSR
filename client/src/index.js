@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { ThemeProvider } from '@emotion/react';
 import { Box, createTheme } from '@mui/material';
+import './index.css'
+import { BrowserRouter } from 'react-router-dom';
 const theme = createTheme({
   components: {
     MuiButton: {

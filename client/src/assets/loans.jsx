@@ -20,6 +20,7 @@ export const loanDetailsData = [
       "Minimum income is 250 JOD",
       "Maximum DBR is up to 50% and for social security retirees up to 60%",
     ],
+        isStaff:false,
     minIncomeAmount: 250,
     maxAmount: (intrestRates) =>{
       let initialValue=0;
@@ -44,7 +45,8 @@ export const loanDetailsData = [
     hasPrevLoan: false,
     loan_attatchments:[],
     activeLoans: [
-      { activeLoanAmount: null, activeLoanLayer: null, activeLoanType: null },
+      { activeLoanLeftMonths: null, activeLoanLayer: null,activeLoanPayPerMonthInput:null, activeLoanType: null }
+,
     ],
     currentSalary: 0,
     normalDBR: 0.5,
@@ -53,6 +55,7 @@ export const loanDetailsData = [
     totalAppliedLayers: [],
     activeLoansDeductions:[],
     maxAmountAfterDeduction:0,
+    isStaff:false,
     loadIcon: (props) => <HouseOutlinedIcon sx={props} />,
   },
   {
@@ -97,11 +100,13 @@ export const loanDetailsData = [
     socialSecurityDBR: 0.6,
     loan_attatchments:[],
     activeLoans: [
-      { activeLoanAmount: null, activeLoanLayer: null, activeLoanType: null },
+      { activeLoanLeftMonths: null, activeLoanLayer: null,activeLoanPayPerMonthInput:null, activeLoanType: null }
+,
     ],
     currentSalary: 0,
     hasPrevLoan: false,
     Minimumtenor: 12,
+    isStaff:false,
     totalAppliedLayers: [],
     activeLoansDeductions:[],
  maxAmountAfterDeduction:0,    loadIcon: (props) => <HouseOutlinedIcon sx={props} />,
@@ -144,8 +149,10 @@ export const loanDetailsData = [
     minMonths: 12,
     maxMonths: 300,
     totalInterest: 0,
+    isStaff:false,
     activeLoans: [
-      { activeLoanAmount: null, activeLoanLayer: null, activeLoanType: null },
+      { activeLoanLeftMonths: null, activeLoanLayer: null,activeLoanPayPerMonthInput:null, activeLoanType: null }
+,
     ],
     currentSalary: 0,
     hasPrevLoan: false,
@@ -243,7 +250,8 @@ export const loanDetailsData = [
     maxAmountAfterDeduction:0,
     loan_loan_attatchments:[],
         activeLoans: [
-      { activeLoanAmount: null, activeLoanLayer: null, activeLoanType: null },
+      { activeLoanLeftMonths: null, activeLoanLayer: null,activeLoanPayPerMonthInput:null, activeLoanType: null }
+,
     ],
     currentSalary: 0,
     hasPrevLoan: false,
