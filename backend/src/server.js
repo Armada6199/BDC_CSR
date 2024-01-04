@@ -3,6 +3,7 @@ const app = express();
 const loanRouter = require("./routes/loanRoute");
 const cors = require("cors");
 const path = require("path");
+const loginRoute=require("./routes/Auth/loginRoute")
 const {engine} = require('express-handlebars');
 // const fileUpload = require('express-fileupload');
 
@@ -26,7 +27,7 @@ app.use(
 app.use(express.json());
 app.get("/", (req, res) => {
 });
-
+app.use('/',loginRoute)
 app.use("/", loanRouter);
 const runServer = (PORT) => {
   app.listen(PORT, () => {

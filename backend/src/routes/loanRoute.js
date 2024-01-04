@@ -16,9 +16,10 @@ router.post("/signature", handleAddSignature);
 router.post("/docuDownload", handleDownloadDocument);
 router.post(
   "/attatchments",
-  upload.array('loan_attatchments'),
-  handleCreateAttatchments  
+  upload.array("loan_attatchments"),
+  handleCreateAttatchments
 );
+router.delete("/attatchments/:name", hanldeDeleteFile);
 function handleGetLoanTemplate(req, res, next) {
   const currentLoan = req.body;
   try {
@@ -108,10 +109,19 @@ async function handleDownloadDocument(req, res, next) {
     console.log(error);
   }
 }
-async function handleSaveAttatchments(employeeName, employeeNumber, file,fileNumber) {
-  console.log(file)
-  const fileName = `${employeeName.split(' ').join('_')+fileNumber}${file.originalname.slice(0,file.originalname.length-4)}.${file.originalname.slice(file.originalname.length-3)}`;
-  const folderPath = `assets/${employeeName+employeeNumber}`;
+async function handleSaveAttatchments(
+  employeeName,
+  employeeNumber,
+  file,
+  fileNumber
+) {
+  const fileName = `${
+    employeeName.split(" ").join("_") + fileNumber
+  }${file.originalname.slice(
+    0,
+    file.originalname.length - 4
+  )}.${file.originalname.slice(file.originalname.length - 3)}`;
+  const folderPath = `assets/${employeeName.split(" ").join("_") + employeeNumber}`;
 
   try {
     if (!fs.existsSync(folderPath)) {
@@ -119,25 +129,71 @@ async function handleSaveAttatchments(employeeName, employeeNumber, file,fileNum
       fs.writeFile(`${folderPath}/${fileName}`, file.buffer, function (err) {
         if (err) throw err;
       });
+      return { msg: `File ${file.originalname} Uploaded Successfully` };
     } else {
+      if (fs.existsSync(`${folderPath}/${fileName}`)) {
+        return {
+          msg: `File ${file.originalname} Already exists in memory`,
+          err: "Already Exists",
+        };
+      }
       fs.writeFile(`${folderPath}/${fileName}`, file.buffer, function (err) {
         if (err) throw err;
       });
+      return { msg: `File ${file.originalname} Uploaded Successfully` };
     }
   } catch (error) {
     throw new Error(error);
   }
 }
 async function handleCreateAttatchments(req, res, next) {
-  const {employeeName,employeeNumber,fileNumber}=req.body;
-  console.log(req.files)
+  const { employeeName, employeeNumber, fileNumber } = req.body;
+  const statusObj = { errs: [] };
   try {
     for (file of req.files) {
-      await handleSaveAttatchments(employeeName,employeeNumber,file,fileNumber);
+      const { msg, err } = await handleSaveAttatchments(
+        employeeName,
+        employeeNumber,
+        file,
+        fileNumber
+      );
+      if (err) {
+        const errorObj = { [file.originalname]: file.originalname, msg: err };
+        statusObj.errs = [...statusObj.errs, errorObj];
+      } else statusObj[file.originalname] = msg;
     }
-    res.end();
+    res.status(200).send(statusObj);
   } catch (error) {
     next(error);
   }
 }
+async function deleteFile(filePath) {
+  try {
+    await fs.unlink(filePath, function (err) {
+      if (err) throw new Error(err);
+      console.log("file deleted successfully");
+    });
+    return `File ${filePath} has been deleted.`
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+async function hanldeDeleteFile(req, res, next) {
+  const fileName = req.params.name;
+  //// no session or jwt token  to store and pressist login data
+  const employeeName = "mohamad_abdin";
+  const employeeNumber = 1111;
+  const fileNumber=22;
+  try {
+    const folderPath = `assets/${employeeName + employeeNumber}`;
+    if (fs.existsSync(`${folderPath}/${fileName}`)) {
+      next("file doesnt exists");
+    }
+   const deleteStat= await deleteFile(folderPath +'/'+ (employeeName+fileNumber+fileName));
+    res.status(200).send({deleteStat});
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = router;
