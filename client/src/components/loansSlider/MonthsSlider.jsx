@@ -21,7 +21,7 @@ function MonthsSlider({
   validateGreaterThanSalary
 }) {
   const isMobile=useMediaQuery('(max-width:600px)');
-  const debouncedMonths=useDebounce(currentLoan.numberOfMonths_Input||currentLoan.numberOfMonths_Slider)
+  const debouncedMonths=useDebounce(currentLoan.numberOfMonths_Input||currentLoan.numberOfMonths_Slider);
   return (
     <FormControl
       fullWidth
