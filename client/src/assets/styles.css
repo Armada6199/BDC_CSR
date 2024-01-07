@@ -26,7 +26,7 @@
     background-repeat: no-repeat;
     background-image: url('./busnisse3.jpeg');
   }
-  .activeLoanForm-enter{
+  /* .activeLoanForm-enter{
     opacity: 0;
   }
   .activeLoanForm-enter-active{
@@ -41,4 +41,16 @@
     opacity: 0;
     transform: translateX(20%);
     transition: all 1s linear;
-  }
+  } */
+.download_loader{
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #C4B28F;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -38,27 +38,28 @@ const InteractiveAttatchments = ({ currentLoan }) => {
   //   postData();
   // }, []);
   async function handleAddSignature(sigPad) {
-    setSignatureState(sigPad.getTrimmedCanvas().toDataURL());
-    setPdfString("");
+    // setPdfString("");
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/signature`,
-        {
-          ...currentLoan,
-          signatureBase64: sigPad.getTrimmedCanvas().toDataURL(),
-        }
-      );
-      if (response.status === 200) {
-        // console.log(response.data)
-        setPdfString(response.data);
-        setOpenModal(false);
-      }
+      // const response = await axios.post(
+      //   `${process.env.REACT_APP_API_URL}/signature`,
+      //   {
+      //     ...currentLoan,
+      //     signatureBase64: sigPad.getTrimmedCanvas().toDataURL(),
+      //   }
+      // );
+      // if (response.status === 200) {
+      //   // console.log(response.data)
+
+      // }\
+      setSignatureState(sigPad.getTrimmedCanvas().toDataURL());
+      setOpenModal(false);
     } catch (error) {
       console.log(error);
     }
   }
   async function handleDownloadDocument() {
-    setPdfString("");
+    // setPdfString("");
+    setDownloading(true)
     try {
       const downloadResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/docuDownload`,
@@ -86,6 +87,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
       link.click();
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
+      setDownloading(false)
     } catch (error) {
       console.log(error);
     }
@@ -93,7 +95,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
   const increaseZoom=()=>(setZoomState(prev=>prev+25));
   const decreaseZoom=()=>(setZoomState(prev=>prev-25));
 
-  return pdfString.length > 0 ? (
+  return  (
     <>
       <Grid
         container
@@ -102,7 +104,8 @@ const InteractiveAttatchments = ({ currentLoan }) => {
         sx={{glassmorphismStyle}}
         maxHeight={"65vh"}
         // width={'65vw'}
-        overflow={"scroll"}
+        // overflow={"scroll"}
+        overflow={'auto'}
         >
         <DocumentToolbar
           handleAddSignature={handleAddSignature}
@@ -114,6 +117,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
           handleOpen={handleOpen}
           handleClose={handleClose}
           openModal={openModal}
+          downloading={downloading}
         />
 
         <Grid
@@ -125,6 +129,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
           spacing={4}
           width={'60vw'}
           sx={{zoom:zoomState/100}}
+          // sx={{transform:`scaleX(${zoomState/100})`}}
         >
           <Grid item md={12}>
             <Typography textAlign={"center"} fontWeight={"700"} variant="h3">
@@ -350,11 +355,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
         </Grid>
       </Grid>
     </>
-  ) : (
-    <Grid container item minHeight={"75vh"}>
-      <Loader />
-    </Grid>
-  );
+  )
 };
 
 export default InteractiveAttatchments;

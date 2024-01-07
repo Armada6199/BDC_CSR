@@ -5,7 +5,7 @@ import CustomDatePicker from "../CustomDatePicker";
 function PersonalInformation({  register, errors,currentLoan }) {
 
   return (
-    <Grid maxHeight={'50vh'} container spacing={4}  item   md={12}>
+    <Grid  container spacing={4}  item   md={12}>
       <Grid  item md={12}>
       <Typography  variant="h5" fontWeight={'600'}>Personal Information</Typography>
       </Grid>

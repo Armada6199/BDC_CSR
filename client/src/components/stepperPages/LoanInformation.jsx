@@ -7,8 +7,9 @@ import {
   RadioGroup,
   Typography,
   FormHelperText,
+  useMediaQuery,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import ActiveLoanForm from "../ActiveLoanForm";
 import LoanDetails from "../LoanDetails";
 import LoanTypes from "../LoanTypes";
@@ -16,9 +17,9 @@ import CurrentSalarySlider from "../loansSlider/CurrentSalarySlider";
 import MonthsSlider from "../loansSlider/MonthsSlider";
 import AmountSlider from "../loansSlider/AmountSlider";
 import calculateEMI from "../../utils/utils";
-import '../../assets/styles.css'
+import "../../assets/styles.css";
+import { TransitionGroup } from "react-transition-group";
 
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 function LoanInformation({
   currentLoan,
   setCurrentLoan,
@@ -26,7 +27,6 @@ function LoanInformation({
   register,
   errors,
   setValue,
-  handleSetEMI,
 }) {
   const handleSliderChange = (e) => {
     let { name, value } = e.target;
@@ -47,28 +47,36 @@ function LoanInformation({
       maxMonths,
     } = currentLoan;
     if (numberOfMonths && loanAmount && currentSalary) {
-      let { payPerMonth, totalAmount, totalInterests } = calculateEMI(
-        Number(loanAmount),
+      loanAmount = Number(loanAmount);
+      let { payPerMonth, EMI } = calculateEMI(
+        loanAmount,
         intrestRates,
         numberOfMonths,
         currentLoan.title,
         activeLoans
       );
-      totalAmount += totalInterests;
-      const isEligible = payPerMonth <= currentSalary / 2;
       const halfSalary = currentSalary / 2;
+      const isEligible = payPerMonth <= halfSalary;
+
       if (isEligible) {
         return true;
       } else {
         for (let i = numberOfMonths; i < maxMonths; i++) {
-          if (totalAmount / i <= halfSalary) {
-            console.log(
-              `found pay per month is ${i} and amount is ${
-                totalAmount / i
-              } for loan amount of${totalAmount} and half of your salary is ${
-                currentSalary / 2
-              }`
-            );
+          let { payPerMonth } = calculateEMI(
+            loanAmount,
+            intrestRates,
+            i,
+            currentLoan.title,
+            activeLoans
+          );
+          if (payPerMonth <= halfSalary) {
+            // console.log(
+            //   `found pay per month is ${i} and pay per month ${
+            //     EMI / i
+            //   } for loan amount of${EMI} and half of your salary is ${
+            //     halfSalary
+            //   }`
+            // );
             return `Minimum Term For your request is ${i}`;
           }
         }
@@ -76,12 +84,17 @@ function LoanInformation({
       return "You Arent Eligiable for this Amount";
     }
   };
+  const isMobile = useMediaQuery("(max-width:600px)");
   return (
     <Grid container alignItems={"flex-start"} spacing={10}>
-      <Grid container alignItems={"center"} item md={6} gap={4}>
+      <Grid container alignItems={"center"} item sm={12} md={6} gap={4}>
         <Grid container item md={12} gap={4}>
           <Grid item md={12}>
-            <Typography variant="h5" fontWeight={"600"}>
+            <Typography
+              textAlign={isMobile ? "center" : "start"}
+              variant="h5"
+              fontWeight={"600"}
+            >
               I want to apply
             </Typography>
           </Grid>
@@ -93,8 +106,8 @@ function LoanInformation({
             />
           </Grid>
         </Grid>
-        <Grid container item md={10} lg={12} spacing={4} gap={4}>
-          <Grid container item>
+        <Grid container item sm={12} md={10} lg={12} spacing={4} gap={4}>
+          <Grid container item sm={12}>
             <AmountSlider
               currentLoan={currentLoan}
               handleSliderChange={handleSliderChange}
@@ -138,10 +151,23 @@ function LoanInformation({
               name="currentLoan"
               row
               onChange={(e) => {
-                setCurrentLoan({
-                  ...currentLoan,
-                  hasPrevLoan: e.target.value == "yes" ? true : false,
-                });
+                e.target.value == "yes"
+                  ? setCurrentLoan({
+                      ...currentLoan,
+                      hasPrevLoan: true,
+                    })
+                  : setCurrentLoan((prev) => ({
+                      ...prev,
+                      activeLoans: [
+                        {
+                          activeLoanLeftMonths: 0,
+                          activeLoanLayer: 0,
+                          activeLoanPayPerMonthInput: 0,
+                          activeLoanType: 0,
+                        },
+                      ],
+                      hasPrevLoan: false,
+                    }));
               }}
             >
               <Grid item md={2}>
@@ -193,17 +219,17 @@ function LoanInformation({
           </FormControl>
         </Grid>
         {currentLoan.hasPrevLoan && (
-          <Grid container item minHeight={"140px"} gap={6}  md={12}>
-              {currentLoan.activeLoans.map((activeLoan, index) => (
-                  <ActiveLoanForm
-                  key={index}
-                    index={index}
-                    activeLoan={activeLoan}
-                    register={register}
-                    currentLoan={currentLoan}
-                    setCurrentLoan={setCurrentLoan}
-                  />
-              ))}
+          <Grid container item minHeight={"140px"} gap={6} md={12}>
+            {currentLoan.activeLoans.map((activeLoan, index) => (
+              <ActiveLoanForm
+                key={index}
+                index={index}
+                activeLoan={activeLoan}
+                register={register}
+                currentLoan={currentLoan}
+                setCurrentLoan={setCurrentLoan}
+              />
+            ))}
           </Grid>
         )}
       </Grid>

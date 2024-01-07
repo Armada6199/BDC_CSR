@@ -7,9 +7,11 @@ import {
   Slider,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { loanInfoInputStyle } from "../../assets/styles";
+import { useDebounce } from "../../hooks/debounce";
 
 function MonthsSlider({
   register,
@@ -18,6 +20,8 @@ function MonthsSlider({
   handleSliderChange,
   validateGreaterThanSalary
 }) {
+  const isMobile=useMediaQuery('(max-width:600px)');
+  const debouncedMonths=useDebounce(currentLoan.numberOfMonths_Input||currentLoan.numberOfMonths_Slider)
   return (
     <FormControl
       fullWidth
@@ -29,7 +33,7 @@ function MonthsSlider({
       }
     >
       <Grid container item md={12}>
-        <Grid container justifyContent={"space-between"} item md={12}>
+        <Grid container flexDirection={isMobile?'column':"row"} gap={2} justifyContent={"space-between"} item md={12}>
           <Grid item md={6}>
             <Typography fontWeight={"600"} variant="h5">
               For so long:
@@ -65,6 +69,7 @@ function MonthsSlider({
                     <EditIcon sx={{ color: "#C4B28F" }} />
                   </InputAdornment>
                 ),
+                sx:{fontWeight:700}
               }}
               value={currentLoan.numberOfMonths}
               variant="outlined"

@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { glassmorphismStyle } from "../assets/styles";
-import { Grid, Typography, Button } from "@mui/material";
+import { Grid, Typography, Button, Collapse, List, ListItem } from "@mui/material";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ClearIcon from "@mui/icons-material/Clear";
 import ProgressBar from "./ProgressBar";
 import axios from "axios";
+import { TransitionGroup } from "react-transition-group";
 
 function LoanAttatchmentsPreview({
   attatchments,
@@ -22,13 +23,15 @@ function LoanAttatchmentsPreview({
       status: { errs: [] },
     }));
   }, [attatchments.length]);
-  async function hanldeRemoveFromServer(name){
+  async function hanldeRemoveFromServer(name) {
     try {
-        const removedFile=await axios.delete(`${process.env.REACT_APP_API_URL}/attatchments/${name}`);
-        if(removedFile.status==200) handleDeleteAttatchment(name);
-        console.log(removedFile)
+      const removedFile = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/attatchments/${name}`
+      );
+      if (removedFile.status == 200) handleDeleteAttatchment(name);
+      console.log(removedFile);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   }
   return (
@@ -40,69 +43,102 @@ function LoanAttatchmentsPreview({
             : "Attatchments will appear here once selected"}
         </Typography>
       </Grid>
-      <Grid container gap={8} item md={12}>
-        {attatchments.map((file) => {
-          let isSuccessful = null;
-          if (uploadProgress.finished) {
-            isSuccessful = uploadProgress?.status.errs.find(
-              (ele) => ele[file.name] === file.name
-            );
-          }
-          return (
-            <Grid
-              container
-              spacing={2}
-              key={file.name}
-              item
-              p={1}
-              borderRadius={"15px"}
-              md={12}
-            >
-              {uploadProgress.finished && isSuccessful && (
-                <Grid container justifyContent={"flex-end"} gap={3} item md={12}>
-                  <Grid container alignItems={'center'} justifyContent={'center'} p={1} item md={4} bgcolor={"#f6f6f6"}  borderRadius={"10px"}>
-                    <Typography
-                      color={"rgb(255,51,51)"}
-                      fontWeight={"600"}
-                      textAlign={"center"}
-                      variant="body1"
+      <List sx={{ mt: 1,width:'100%' }}>
+        <TransitionGroup >
+          {attatchments.map((file,index) => {
+              let isSuccessful = null;
+              if (uploadProgress.finished) {
+                isSuccessful = uploadProgress?.status.errs.find(
+                  (ele) => ele[file.name] === file.name
+                );
+              }
+              
+            return (
+              <Collapse key={file.name+[index]} sx={{width:"100%"}} >
+                {" "}
+                <ListItem>
+                <Grid
+                  container
+                  spacing={2}
+                  key={file.name}
+                  item
+                  p={1}
+                  borderRadius={"15px"}
+                  md={12}
+                >
+                  {uploadProgress.finished && isSuccessful && (
+                    <Grid
+                      container
+                      justifyContent={"flex-end"}
+                      gap={3}
+                      item
+                      md={12}
                     >
-                      File {isSuccessful.msg}
+                      <Grid
+                        container
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        p={1}
+                        item
+                        md={4}
+                        bgcolor={"#f6f6f6"}
+                        borderRadius={"10px"}
+                      >
+                        <Typography
+                          color={"rgb(255,51,51)"}
+                          fontWeight={"600"}
+                          textAlign={"center"}
+                          variant="body1"
+                        >
+                          File {isSuccessful.msg}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  )}
+                  <Grid item md={1}>
+                    <InsertDriveFileIcon
+                      sx={{ fontSize: 36, color: "secondary.dark" }}
+                    />
+                  </Grid>
+                  <Grid item md={10}>
+                    <Typography
+                      textAlign={"center"}
+                      variant="subtitle1"
+                      fontWeight={"500"}
+                    >
+                      {file.name}
                     </Typography>
                   </Grid>
-                  <Grid item md={5}>
-                <Button onClick={()=>hanldeRemoveFromServer(file.name)} fullWidth variant="outlined">Remove From Servers</Button>
+                  <Grid
+                    container
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => handleDeleteAttatchment(file.name)}
+                    justifyContent={"flex-end"}
+                    item
+                    md={1}
+                  >
+                    <ClearIcon sx={{ fontSize: 24 }} />
                   </Grid>
                 </Grid>
-              )}
-              <Grid item md={1}>
-                <InsertDriveFileIcon
-                  sx={{ fontSize: 36, color: "secondary.dark" }}
-                />
-              </Grid>
-              <Grid item md={10}>
-                <Typography
-                  textAlign={"center"}
-                  variant="subtitle1"
-                  fontWeight={"500"}
-                >
-                  {file.name}
-                </Typography>
-              </Grid>
-              <Grid
-                container
-                sx={{ cursor: "pointer" }}
-                onClick={() => handleDeleteAttatchment(file.name)}
-                justifyContent={"flex-end"}
-                item
-                md={1}
-              >
-                <ClearIcon sx={{ fontSize: 24 }} />
-              </Grid>
-            </Grid>
+                </ListItem>
+              </Collapse>
+            );
+          })}
+        </TransitionGroup>
+      </List>
+      {/* <TransitionGroup >
+        <Collapse in={true} style={{transitionDelay:'500ms'}} >
+      <Grid container gap={8} item md={12}>
+        {attatchments.map((file) => {
+        
+          return (
+
           );
         })}
       </Grid>
+      </Collapse>
+
+      </TransitionGroup> */}
       <Grid container item md={12}>
         {uploadProgress.started ? (
           <Grid container alignItems={"center"} spacing={4} item md={12}>

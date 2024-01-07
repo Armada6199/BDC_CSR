@@ -14,7 +14,7 @@ import { loanInfoInputStyle } from "../assets/styles";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CSSTransition,T } from "react-transition-group";
+import Slide from "@mui/material/Slide";
 function ActiveLoanForm({
   register,
   currentLoan,
@@ -25,24 +25,33 @@ function ActiveLoanForm({
   function handleAddNewLoan() {
     const newActiveLoans = currentLoan.activeLoans;
     newActiveLoans.push({
-      activeLoanAmount: null,
-      activeLoanLayer: null,
-      activeLoanType: null,
+      activeLoanAmount: 0,
+      activeLoanLayer: 0,
+      activeLoanType: 0,
     });
     setCurrentLoan((prev) => ({ ...prev, activeLoans: newActiveLoans }));
   }
-  useEffect(()=>{
+  useEffect(() => {
     handleChangeMaxLoanAmount();
-  },[currentLoan.activeLoans[index]])
-  function handleChangeMaxLoanAmount(e){
-    if(activeLoan.activeLoanType===currentLoan.title){
-      let deductionValue=e?.target.value||activeLoan.activeLoanAmount;
-      const maxAmountAfterDeduction=currentLoan.maxAmount(currentLoan.intrestRates)-deductionValue;
-      setCurrentLoan((prev)=>({...prev,maxAmountAfterDeduction}));
-    }else{
-      setCurrentLoan((prev)=>({...prev,maxAmountAfterDeduction:currentLoan.maxAmount(currentLoan.intrestRates)}))
+  }, [currentLoan.activeLoans[index]]);
+  function handleChangeMaxLoanAmount(e) {
+    if (activeLoan.activeLoanType === currentLoan.title) {
+      let deductionValue = e?.target.value || activeLoan.activeLoanAmount;
+      const maxAmountAfterDeduction =
+        currentLoan.maxAmount(currentLoan.intrestRates) - deductionValue;
+      setCurrentLoan((prev) => ({ ...prev, maxAmountAfterDeduction }));
+    } else {
+      setCurrentLoan((prev) => ({
+        ...prev,
+        maxAmountAfterDeduction: currentLoan.maxAmount(
+          currentLoan.intrestRates
+        ),
+      }));
     }
   }
+  useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, [currentLoan.activeLoans]);
   function handleLoanInputChange(e) {
     let { name, value } = e.target;
     name = name.slice(0, name.length - 1);
@@ -51,23 +60,18 @@ function ActiveLoanForm({
     setCurrentLoan((prev) => ({ ...prev, activeLoans: newActiveLoans }));
   }
   function handleDeleteActiveLoan() {
-    if(index>0){
+    if (index > 0) {
       const newActiveLoans = currentLoan.activeLoans;
       newActiveLoans.splice(index, 1);
       setCurrentLoan((prev) => ({ ...prev, activeLoans: newActiveLoans }));
-    }else {
-      index===0&&setCurrentLoan({
-        ...currentLoan,
-        hasPrevLoan:false,
-      })}
+    }
   }
   return (
-    <Grid container item md={12} spacing={2} >
+    <Slide in={true}  direction="right" mountOnEnter unmountOnExit >
+    <Grid container item   md={12} spacing={2}>
       <Grid item sm={12} md={6} xl={3}>
-        <FormControl fullWidth>
-          <InputLabel >
-            Current Loan Type
-          </InputLabel>
+        <FormControl fullWidth >
+          <InputLabel>Loan Type</InputLabel>
           <Select
             labelId="activeLoanType"
             label="Loan Type"
@@ -83,18 +87,22 @@ function ActiveLoanForm({
           </Select>
         </FormControl>
       </Grid>
-      <Grid item sm={12} md={6} xl={3 }>
+      <Grid item sm={12} md={6} xl={3}>
         <FormControl fullWidth>
-          <InputLabel >
-            Current Loan Layer
-          </InputLabel>
+          <InputLabel>Loan Layer</InputLabel>
           <Select
             labelId="activeLoanLayer"
             label="Loan Layer"
             {...register(`activeLoanLayer${index}`)}
             onChange={(e) => handleLoanInputChange(e)}
             value={currentLoan.activeLoans[index].activeLoanLayer}
-            disabled={currentLoan.isStaff?true:activeLoan.activeLoanType ? false : true}
+            disabled={
+              currentLoan.isStaff
+                ? true
+                : activeLoan.activeLoanType
+                ? false
+                : true
+            }
           >
             <MenuItem value={"First Layer"}>First Layer</MenuItem>
             <MenuItem value={"Second Layer"}>Second Layer</MenuItem>
@@ -105,7 +113,7 @@ function ActiveLoanForm({
       </Grid>
       <Grid item sm={12} md={4} xl={2}>
         <TextField
-          sx={loanInfoInputStyle}
+          // sx={loanInfoInputStyle}
           fullWidth
           id="activeLoanPayPerMonthInput"
           label={"Pay Per Month"}
@@ -119,7 +127,8 @@ function ActiveLoanForm({
           {...register(`activeLoanPayPerMonthInput${index}`)}
           onChange={(e) => {
             handleChangeMaxLoanAmount(e);
-            handleLoanInputChange(e)}}
+            handleLoanInputChange(e);
+          }}
           type="number"
           // inputProps={{
           //   min: ,
@@ -128,12 +137,18 @@ function ActiveLoanForm({
           // }}
           value={currentLoan.activeLoans[index].activeLoanPayPerMonthInput}
           variant="outlined"
-          disabled={currentLoan.isStaff?true:activeLoan.activeLoanLayer ? false : true}
+          disabled={
+            currentLoan.isStaff
+              ? true
+              : activeLoan.activeLoanLayer
+              ? false
+              : true
+          }
         />
       </Grid>
-      <Grid item sm={12} md={4} xl={2} >
+      <Grid item sm={12} md={4} xl={2}>
         <TextField
-          sx={loanInfoInputStyle}
+          // sx={loanInfoInputStyle}
           fullWidth
           id="activeLoanLeftMonths"
           label={"Left Months"}
@@ -147,7 +162,8 @@ function ActiveLoanForm({
           {...register(`activeLoanLeftMonths${index}`)}
           onChange={(e) => {
             handleChangeMaxLoanAmount(e);
-            handleLoanInputChange(e)}}
+            handleLoanInputChange(e);
+          }}
           type="number"
           // inputProps={{
           //   min: ,
@@ -156,10 +172,16 @@ function ActiveLoanForm({
           // }}
           value={currentLoan.activeLoans[index].activeLoanLeftMonths}
           variant="outlined"
-          disabled={currentLoan.isStaff?true:activeLoan.activeLoanLayer ? false : true}
+          disabled={
+            currentLoan.isStaff
+              ? true
+              : activeLoan.activeLoanLayer
+              ? false
+              : true
+          }
         />
       </Grid>
-      <Grid container item   sm={12}  md={4} xl={2}>
+      <Grid container item justifyContent={"flex-end"} sm={12} md={4} xl={2}>
         <Grid item md={6}>
           <Box
             sx={{
@@ -173,18 +195,26 @@ function ActiveLoanForm({
               cursor: "pointer",
             }}
             onClick={() =>
-              activeLoan.activeLoanLeftMonths &&
-              activeLoan.activeLoanLayer &&
-              activeLoan.activeLoanPayPerMonthInput &&
-              activeLoan.activeLoanType&&
-              !currentLoan.isStaff&&
+              // activeLoan.activeLoanLeftMonths &&
+              // activeLoan.activeLoanLayer&&
+              // activeLoan.activeLoanPayPerMonthInput &&
+              // activeLoan.activeLoanType&&
+              // !currentLoan.isStaff&&
               handleAddNewLoan()
             }
           >
             <AddIcon sx={{ fontSize: 42, color: "#C4B28F" }} />
           </Box>
         </Grid>
-          <Grid   item   sx={{ cursor: "pointer" }} onClick={()=> currentLoan.isStaff?null:handleDeleteActiveLoan()}   md={6}>
+        {index !== 0 && (
+          <Grid
+            item
+            sx={{ cursor: "pointer" }}
+            onClick={() =>
+              currentLoan.isStaff ? null : handleDeleteActiveLoan()
+            }
+            md={6}
+          >
             <Box
               sx={{
                 display: "flex",
@@ -200,8 +230,11 @@ function ActiveLoanForm({
               <DeleteIcon sx={{ fontSize: 42, color: "#C4B28F" }} />
             </Box>
           </Grid>
+        )}
       </Grid>
     </Grid>
+    </Slide>
+
   );
 }
 

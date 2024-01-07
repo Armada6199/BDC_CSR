@@ -10,7 +10,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import GestureIcon from "@mui/icons-material/Gesture";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import Link from "@mui/material/Link";
-
+import './assets/styles.css'
 function DocumentToolbar({
   handleAddSignature,
   handleDownloadDocument,
@@ -20,7 +20,8 @@ function DocumentToolbar({
   pdfString,
   handleOpen,
   handleClose,
-  openModal
+  openModal,
+  downloading
 }) {
   
   const clear = () => sigPad.clear();
@@ -123,19 +124,28 @@ function DocumentToolbar({
             SIGN
           </Button>
         </Grid>
+        <Grid container alignItems={'center'} item md={2}>
+       {downloading&&
         <Grid item md={2}>
-          <Button
+           <div class="download_loader"></div>
+       </Grid>}
+       <Grid item md={8}>
+       <Button
             fullWidth
             sx={{
               fontWeight: "600",
               ":hover": { backgroundColor: "secondary.light" },
             }}
+            disabled={downloading}
             onClick={() => handleDownloadDocument(sigPad)}
             startIcon={<SaveAltIcon />}
             variant="text"
           >
+          
             DOWNLOAD
           </Button>
+       </Grid>
+      
         </Grid>
         </Grid>
      

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
-import { Grid } from "@mui/material";
+import { Grid, useMediaQuery } from "@mui/material";
 import StepperComponentsHOC from "../components/StepperComponentsHOC.jsx";
 import { useForm } from "react-hook-form";
 import calculateEMI from "../utils/utils.js";
@@ -17,7 +17,7 @@ const steps = [
   "5. Loan Agreement",
 ];
 function LoanStepperPage({ currentLoan, setCurrentLoan }) {
-  const [activeStep, setActiveStep] = React.useState(2);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [loans, setLoans] = React.useState(loanDetailsData);
   const [uploadProgress, setUploadProgress] = useState({
     started: false,
@@ -32,6 +32,8 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
     setValue,
   } = useForm({
     mode: "onSubmit",
+    reValidateMode:'onSubmit',
+    // reValidateMode:'onChange',
     defaultValues: {
       ...currentLoan,
       currentSalary_Slider: currentLoan.currentSalary,
@@ -73,12 +75,12 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
     let { loanAmount, numberOfMonths, intrestRates, activeLoans } = currentLoan;
     loanAmount = Number(loanAmount);
     const {
-      totalAmount,
+      EMI,
       totalInterests,
       totalInterestLayers,
       activeLoansDeductions,
     } = calculateEMI(
-      loanAmount,
+     loanAmount,
       intrestRates,
       numberOfMonths,
       currentLoan.title,
@@ -88,9 +90,9 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
       ...prev,
       loanAmount: loanAmount,
       numberOfMonths: numberOfMonths,
-      EMI: totalAmount,
+      EMI: EMI,
       interestPayable: totalInterests,
-      payPerMonth: totalAmount / Number(numberOfMonths),
+      payPerMonth: EMI / Number(numberOfMonths),
       totalAppliedLayers: totalInterestLayers,
       activeLoansDeductions: activeLoansDeductions,
     }));
@@ -125,16 +127,18 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
     setCurrentLoan(loans[0]);
     setActiveStep(0);
   };
+  const isMobile=useMediaQuery('(max-width:600px)');
   return (
     <form noValidate onSubmit={handleSubmit(handleNext)}>
       <Grid
         container
         maxWidth={"100vw"}
         minHeight={"100vh"}
+        justifyContent={isMobile?'center':"flex-start"}
         bgcolor={"background.default"}
         item
       >
-        <Grid container minHeight={"20vh"} item md={12} p={4} gap={2}>
+        <Grid container  minHeight={"20vh"} item md={12} p={4} gap={2}>
           <Typography variant="h4">Apply Loan</Typography>
           <Grid item md={12}>
             <Stepper activeStep={activeStep}>

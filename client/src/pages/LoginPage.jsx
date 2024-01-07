@@ -89,20 +89,22 @@ function LoginPage({setCurrentLoan}) {
           justifyContent={"center"}
           bgcolor={"#f6f6f6"}
           alignItems={"center"}
-          gap={8}
+          gap={4}
         >
           <Grid item md={12}>
             <Typography textAlign={"center"}  variant="h5" fontWeight={"600"}>
            Select one of the following options to continue
             </Typography>
           </Grid>
+          <Grid container item justifyContent={'center'} gap={8} md={12}>
           <Grid
             container
             item
             md={8}
             onClick={handleOpenStaffLogin}
             sx={{ cursor: "pointer",...glassmorphismStyle,boxShadow: '-3px 7px 6px -5px rgba(0,0,0,0.37)',border:"none"}}
-            height={"140px"}
+            minHeight={'120px'}
+            maxHeight={"40%"}
           >
             <Grid
               container
@@ -112,6 +114,7 @@ function LoginPage({setCurrentLoan}) {
               item
               sx={{borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px'}}
               md={4}
+              
             >
               <BusinessCenterOutlinedIcon
                 sx={{ fontSize: 75, color: "white" }}
@@ -133,7 +136,8 @@ function LoginPage({setCurrentLoan}) {
             container
             item
             md={8}
-            height={"140px"}
+            minHeight={'120px'}
+            maxHeight={"40%"}
             onClick={()=>navigate('loan')}
             sx={{ cursor: "pointer",...glassmorphismStyle,boxShadow: '-3px 7px 6px -5px rgba(0,0,0,0.37)',border:"none"}}
           >
@@ -161,6 +165,8 @@ function LoginPage({setCurrentLoan}) {
               </Typography>
             </Grid>
           </Grid>
+          </Grid>
+ 
         </Grid>
       </Grid>
       <FooterTest />

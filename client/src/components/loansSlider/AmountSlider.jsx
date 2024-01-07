@@ -7,6 +7,7 @@ import {
   Slider,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { loanInfoInputStyle } from "../../assets/styles";
@@ -17,12 +18,13 @@ function AmountSlider({
   errors,
   validateGreaterThanSalary
 }) {
-  const maxAmount=currentLoan.maxAmountAfterDeduction||currentLoan.maxAmount(currentLoan.intrestRates)
+  const maxAmount=currentLoan.maxAmountAfterDeduction||currentLoan.maxAmount(currentLoan.intrestRates);
+  const isMobile=useMediaQuery('(max-width:600px)');
   return (  
     <FormControl fullWidth error={errors.loanAmount_Slider?.message &&
       errors.loanAmount_Input?.message ?true:false}>
-      <Grid container item md={12}>
-        <Grid container justifyContent={"space-between"} item md={12}>
+      <Grid container  item md={12}>
+        <Grid container flexDirection={isMobile?'column':"row"} gap={2} justifyContent={"space-between"} item md={12}>
           <Grid item md={6}>
             <Typography fontWeight={"600"} variant="h5">
               I want to borrow:
@@ -30,7 +32,7 @@ function AmountSlider({
           </Grid>
           <Grid item md={4}>
             <TextField
-              sx={loanInfoInputStyle}
+              sx={{...loanInfoInputStyle}}
               id="loanAmountInput"
               {...register("loanAmount_Input", {
                 required: currentLoan.loanAmount
@@ -58,6 +60,8 @@ function AmountSlider({
                   </InputAdornment>
                 ),
                 value: currentLoan.loanAmount,
+                sx:{fontWeight:700}
+
               }}
               variant="outlined"
             />

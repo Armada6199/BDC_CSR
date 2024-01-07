@@ -43,7 +43,6 @@ function Documents({
       const newAttatchments = currentLoan.loan_attatchments.filter(
         (e) => e.name !== name
       );
-      console.log(newAttatchments,name)
       setCurrentLoan((prev) => ({
         ...prev,
         loan_attatchments: newAttatchments,

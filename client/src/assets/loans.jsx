@@ -100,7 +100,7 @@ export const loanDetailsData = [
     socialSecurityDBR: 0.6,
     loan_attatchments:[],
     activeLoans: [
-      { activeLoanLeftMonths: null, activeLoanLayer: null,activeLoanPayPerMonthInput:null, activeLoanType: null }
+      { activeLoanLeftMonths: 0, activeLoanLayer: 0,activeLoanPayPerMonthInput:0, activeLoanType: 0 }
 ,
     ],
     currentSalary: 0,
@@ -151,7 +151,7 @@ export const loanDetailsData = [
     totalInterest: 0,
     isStaff:false,
     activeLoans: [
-      { activeLoanLeftMonths: null, activeLoanLayer: null,activeLoanPayPerMonthInput:null, activeLoanType: null }
+      { activeLoanLeftMonths: 0, activeLoanLayer: 0,activeLoanPayPerMonthInput:0, activeLoanType: 0 }
 ,
     ],
     currentSalary: 0,

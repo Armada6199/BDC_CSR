@@ -7,6 +7,7 @@ import {
   Slider,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { loanInfoInputStyle } from "../../assets/styles";
@@ -17,11 +18,14 @@ function CurrentSalarySlider({
   handleSliderChange,
   errors,
   validateGreaterThanSalary
-}) {
+}) 
+{
+  const isMobile=useMediaQuery('(max-width:600px)');
+
   return (
     <FormControl fullWidth error={errors.currentSalary_Slider?.message &&
       errors.currentSalary_Input?.message ?true:false}>
-      <Grid container justifyContent={"space-between"} item md={12}>
+      <Grid container  flexDirection={isMobile?'column':"row"} gap={2} justifyContent={"space-between"} item md={12}>
         <Grid item md={6}>
           <Typography variant="h5" fontWeight={"600"}>
             Current Salary:
@@ -37,6 +41,7 @@ function CurrentSalarySlider({
                   <EditIcon sx={{ color: "#C4B28F" }} />
                 </InputAdornment>
               ),
+              sx:{fontWeight:700}
             }}
             {...register("currentSalary_Input", {
                 onChange: (e) => handleSliderChange(e),
