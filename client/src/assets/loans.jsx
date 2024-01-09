@@ -56,7 +56,7 @@ export const loanDetailsData = [
     activeLoansDeductions:[],
     maxAmountAfterDeduction:0,
     isStaff:false,
-    loadIcon: (props) => <HouseOutlinedIcon sx={props} />,
+    loadIcon: (props) => <Person2OutlinedIcon sx={props} />,
   },
   {
     title: "Home Loan",

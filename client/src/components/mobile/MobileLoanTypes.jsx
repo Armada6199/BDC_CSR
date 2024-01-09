@@ -6,10 +6,13 @@ import {
   loanIconContStyle,
   loanTypesBoxesStyle,
 } from "../../assets/styles";
-import { InfoOutlined, InfoRounded } from "@mui/icons-material";
+import { InfoRounded } from "@mui/icons-material";
 import LoanDetails from "../LoanDetails";
-export default function LoanTypesSlider({ loans, handleChangeCurrentLoan }) {
 
+export default function LoanTypesSlider({ loans, handleChangeCurrentLoan }) {
+const indecatorIcons=loans.map(loan=>(
+  loan.loadIcon()
+))
   return (
     <Carousel
       navButtonsAlwaysInvisible={true}
@@ -17,6 +20,21 @@ export default function LoanTypesSlider({ loans, handleChangeCurrentLoan }) {
       onChange={(e) => handleChangeCurrentLoan(loans[e].title)}
       autoPlay={false}
       sx={{ width: "100%" }}
+      IndicatorIcon={indecatorIcons}
+      indicatorIconButtonProps={{
+        style: {
+            padding: '10px',
+            marginRight:'10px',
+            color:'white',
+            backgroundColor:'#C4B28F'
+        }
+    }}
+    activeIndicatorIconButtonProps={{
+      style: {
+          backgroundColor: '#215190', 
+          color:"#C4B28F"
+      }
+  }}
     >
       {loans.map((loan, index) => (
         <Item key={index} loan={loan} />
