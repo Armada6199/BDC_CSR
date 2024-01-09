@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
-import { Grid, useMediaQuery } from "@mui/material";
+import { Button, Grid, useMediaQuery } from "@mui/material";
 import StepperComponentsHOC from "../components/StepperComponentsHOC.jsx";
 import { useForm } from "react-hook-form";
 import calculateEMI from "../utils/utils.js";
 import StepperNavigationButtons from "../components/StepperNavigationButtons.jsx";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import MobileStepper from "@mui/material/MobileStepper";
 import axios from "axios";
 import { loanDetailsData } from "../assets/loans.jsx";
+import '../assets/styles.css'
 const steps = [
   "1. Load information",
   "2. Loan Eligibility ",
@@ -19,11 +23,12 @@ const steps = [
 function LoanStepperPage({ currentLoan, setCurrentLoan }) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [loans, setLoans] = React.useState(loanDetailsData);
+  const isMobile = useMediaQuery("(max-width:650px)");
   const [uploadProgress, setUploadProgress] = useState({
     started: false,
     pc: 0,
     finished: false,
-    status: {errs:[]},
+    status: { errs: [] },
   });
   const {
     register,
@@ -32,7 +37,7 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
     setValue,
   } = useForm({
     mode: "onSubmit",
-    reValidateMode:'onSubmit',
+    reValidateMode: "onSubmit",
     // reValidateMode:'onChange',
     defaultValues: {
       ...currentLoan,
@@ -65,7 +70,12 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
         }
       );
       if (postAttatchments.status === 200) {
-        setUploadProgress((prev) => ({ ...prev, started:false,finished: true,status:postAttatchments.data }));
+        setUploadProgress((prev) => ({
+          ...prev,
+          started: false,
+          finished: true,
+          status: postAttatchments.data,
+        }));
       }
     } catch (error) {
       throw new Error(error);
@@ -74,18 +84,14 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
   function handleSetEMI() {
     let { loanAmount, numberOfMonths, intrestRates, activeLoans } = currentLoan;
     loanAmount = Number(loanAmount);
-    const {
-      EMI,
-      totalInterests,
-      totalInterestLayers,
-      activeLoansDeductions,
-    } = calculateEMI(
-     loanAmount,
-      intrestRates,
-      numberOfMonths,
-      currentLoan.title,
-      activeLoans
-    );
+    const { EMI, totalInterests, totalInterestLayers, activeLoansDeductions } =
+      calculateEMI(
+        loanAmount,
+        intrestRates,
+        numberOfMonths,
+        currentLoan.title,
+        activeLoans
+      );
     setCurrentLoan((prev) => ({
       ...prev,
       loanAmount: loanAmount,
@@ -127,58 +133,99 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
     setCurrentLoan(loans[0]);
     setActiveStep(0);
   };
-  const isMobile=useMediaQuery('(max-width:600px)');
   return (
     <form noValidate onSubmit={handleSubmit(handleNext)}>
       <Grid
         container
+        item
         maxWidth={"100vw"}
         minHeight={"100vh"}
-        justifyContent={isMobile?'center':"flex-start"}
+        justifyContent={isMobile ? "center" : "flex-start"}
         bgcolor={"background.default"}
-        item
+        xs={12}
       >
-        <Grid container  minHeight={"20vh"} item md={12} p={4} gap={2}>
-          <Typography variant="h4">Apply Loan</Typography>
-          <Grid item md={12}>
-            <Stepper activeStep={activeStep}>
-              {steps.map((label, index) => {
-                return (
-                  <Box
-                    width={"100%"}
-                    mr={"2px"}
-                    display={"flex"}
-                    flexDirection={"column"}
-                    gap={2}
-                    key={label}
-                  >
-                    <Typography
-                      variant="body1"
-                      color={
-                        activeStep == index
-                          ? "#C4B28F"
-                          : activeStep > index
-                          ? "#215190"
-                          : "darkgray"
+        <Grid container minHeight={"20vh"} item xs={12} p={4} gap={2}>
+          <Grid item xs={12}>
+            <Typography
+              sx={{ textAlign: { xs: "center", md: "start" } }}
+              variant="h4"
+            >
+              Apply Loan
+            </Typography>
+          </Grid>
+          <Grid container={isMobile ? true : false} item xs={12}>
+            {isMobile ? (
+              <Grid container gap={2} item xs={12}>
+                <Grid container justifyContent={"center"} item xs={12}>
+                  <Typography variant="h6">
+                    {steps[activeStep].slice(2)}
+                  </Typography>
+                </Grid>
+                <Grid container item xs={12}>
+                  <MobileStepper
+                    variant="progress"
+                    steps={steps.length}
+                    position="static"
+                    activeStep={activeStep}
+                    classes={{ dotActive: 'progress_active' }}
+                    sx={{
+                      width: "100%",
+                      flexGrow: 1,
+                      justifyContent: "center",
+                      ".MuiMobileStepper-progress": {
+                        width: "100%",
+                        backgroundColor: "secondary.dark",
                       }
-                    >
-                      {label}
-                    </Typography>
+                    }}
+                    style={{
+                      backgroundColor: '#f0f0f0', // Set a background color for the progress bar
+                    }}
+                    
+                 
+                  
+                  />
+                </Grid>
+              </Grid>
+            ) : (
+              <Stepper activeStep={activeStep}>
+                {steps.map((label, index) => {
+                  return (
                     <Box
                       width={"100%"}
-                      height={"5px"}
-                      backgroundColor={
-                        activeStep == index
-                          ? "#C4B28F"
-                          : activeStep > index
-                          ? "#215190"
-                          : "darkgray"
-                      }
-                    ></Box>
-                  </Box>
-                );
-              })}
-            </Stepper>
+                      mr={"2px"}
+                      display={"flex"}
+                      flexDirection={"column"}
+                      gap={2}
+                      key={label}
+                    >
+                      <Typography
+                        variant="body1"
+                        color={
+                          activeStep == index
+                            ? "#C4B28F"
+                            : activeStep > index
+                            ? "#215190"
+                            : "darkgray"
+                        }
+                      >
+                        {label}
+                      </Typography>
+                      <Box
+                        width={"100%"}
+                        height={"5px"}
+                        backgroundColor={
+                          activeStep == index
+                            ? "#C4B28F"
+                            : activeStep > index
+                            ? "#215190"
+                            : "darkgray"
+                        }
+                      ></Box>
+                    </Box>
+                  );
+                })}
+              </Stepper>
+            )}
           </Grid>
         </Grid>
         <Grid
@@ -206,20 +253,26 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
             />
           </Grid>
         </Grid>
-
         <Box
-          sx={{ backgroundColor: "#fff", transition: "all ease-in-out 1s" }}
+          sx={{
+            backgroundColor: "#fff",
+            transition: "all ease-in-out 1s",
+            zIndex: "99",
+          }}
           width={"100%"}
           p={4}
-          height={"65px"}
+          mt={"100px"}
+          height={{ xs: "60px" }}
           position={"sticky"}
           bottom={"0px"}
         >
-          <StepperNavigationButtons
-            handleBack={handleBack}
-            activeStep={activeStep}
-            handleRest={handleReset}
-          />
+          <Grid container item md={12}>
+            <StepperNavigationButtons
+              handleBack={handleBack}
+              activeStep={activeStep}
+              handleRest={handleReset}
+            />
+          </Grid>
         </Box>
       </Grid>
     </form>

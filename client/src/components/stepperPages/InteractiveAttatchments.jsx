@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ElibiblityLayerTable from "../ElibiblityLayerTable";
-import { Button, Grid, Modal } from "@mui/material";
+import { Button, Grid, Modal, useMediaQuery } from "@mui/material";
 import { glassmorphismStyle } from "../../assets/styles";
 import axios from "axios";
 import GestureIcon from "@mui/icons-material/Gesture";
 import Loader from "../Loader";
 import DocumentToolbar from "../../DocumentToolbar";
 const InteractiveAttatchments = ({ currentLoan }) => {
+  const isMobile=useMediaQuery("(max-width:600px)")
   const [pdfString, setPdfString] = useState("f");
   const [signatureState, setSignatureState] = useState("");
   const [downloading, setDownloading] = useState(false);
-  const [zoomState, setZoomState] = useState(100);
+  const [zoomState, setZoomState] = useState(isMobile?50:100);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   const [openModal, setOpenModal] = useState(false);
-
   const blobToBase64 = (blob) => {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
@@ -102,10 +102,12 @@ const InteractiveAttatchments = ({ currentLoan }) => {
         item
         margin={"auto"}
         sx={{glassmorphismStyle}}
-        maxHeight={"65vh"}
-        // width={'65vw'}
-        // overflow={"scroll"}
-        overflow={'auto'}
+        minHeight={'65vh'}
+        maxHeight={{md:"65vh"}}
+        width={{xs:"100%"}}
+        overflow={isMobile?'':'auto'}
+        justifyContent="center"
+        xs={12}
         >
         <DocumentToolbar
           handleAddSignature={handleAddSignature}
@@ -127,16 +129,17 @@ const InteractiveAttatchments = ({ currentLoan }) => {
           margin={"auto"}
           padding={4}
           spacing={4}
-          width={'60vw'}
-          sx={{zoom:zoomState/100}}
+          sx={{height:'100%',zoom:zoomState/100}}
+          xs={12}
+          
           // sx={{transform:`scaleX(${zoomState/100})`}}
         >
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography textAlign={"center"} fontWeight={"700"} variant="h3">
               {currentLoan.title} Loan Agreement
             </Typography>
           </Grid>
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography
               variant="h5"
               fontWeight={"600"}
@@ -152,14 +155,14 @@ const InteractiveAttatchments = ({ currentLoan }) => {
             </Typography>
           </Grid>
           {/* Lender Details */}
-          <Grid container justifyContent={"space-between"} item md={12}>
-            <Grid item md={6}>
+          <Grid container justifyContent={"space-between"} item xs={12}>
+            <Grid item xs={6}>
               <Typography fontWeight={"700"} variant="subtitle1">
                 Lender:
               </Typography>
             </Grid>
-            <Grid container item md={6}>
-              <Grid item md={12}>
+            <Grid container item xs={6}>
+              <Grid item md={6}>
                 <Typography
                   variant="subtitle1"
                   fontWeight={500}
@@ -168,7 +171,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
                   Banque Du Caire
                 </Typography>
               </Grid>
-              <Grid item md={12}>
+              <Grid item xs={6}>
                 <Typography
                   variant="subtitle1"
                   textAlign={"end"}
@@ -180,14 +183,14 @@ const InteractiveAttatchments = ({ currentLoan }) => {
             </Grid>
           </Grid>
           {/* Borrower Details */}
-          <Grid container justifyContent={"space-between"} item md={12}>
-            <Grid item md={6}>
+          <Grid container justifyContent={"space-between"} item xs={12}>
+            <Grid item xs={6}>
               <Typography fontWeight={"700"} variant="subtitle1">
                 Borrower:
               </Typography>
             </Grid>
-            <Grid container item md={6}>
-              <Grid item md={12}>
+            <Grid container item xs={6}>
+              <Grid item xs={12}>
                 <Typography
                   variant="subtitle1"
                   fontWeight={"500"}
@@ -196,7 +199,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
                   {currentLoan?.formData?.employeeName}
                 </Typography>
               </Grid>
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Typography
                   variant="subtitle1"
                   fontWeight={"500"}
@@ -207,8 +210,8 @@ const InteractiveAttatchments = ({ currentLoan }) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container item spacing={4} md={12}>
-            <Grid item md={12}>
+          <Grid container item spacing={4} xs={12}>
+            <Grid item xs={12}>
               <Typography
                 variant="h5"
                 fontWeight={"600"}
@@ -221,7 +224,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
                 Agreement
               </Typography>
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="subtitle1" fontWeight={"500"}>
                 I, {currentLoan?.formData?.employeeName}, hereby acknowledge and
                 accept the terms outlined in the loan agreement, wherein I
@@ -235,9 +238,9 @@ const InteractiveAttatchments = ({ currentLoan }) => {
               </Typography>
             </Grid>
           </Grid>
-          <Grid container spacing={4} item md={12}>
-            <Grid item md={12}>
-              <Grid item md={12}>
+          <Grid container spacing={4} item xs={12}>
+            <Grid item xs={12}>
+              <Grid item xs={12}>
                 <Typography
                   variant="h5"
                   fontWeight={"600"}
@@ -251,12 +254,12 @@ const InteractiveAttatchments = ({ currentLoan }) => {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <ElibiblityLayerTable currentLoan={currentLoan} />
             </Grid> 
           </Grid>
-          <Grid container item md={12} spacing={4}>
-            <Grid item md={12}>
+          <Grid container item xs={12} spacing={4}>
+            <Grid item xs={12}>
               <Typography
                 variant="h5"
                 color={"primary.bluish"}
@@ -269,7 +272,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
                 Signatures
               </Typography>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={6}>
               <Box display={"flex"} flexDirection={"column"} gap={4}>
                 {/* Borrower's Signature */}
                 <Typography
@@ -310,7 +313,7 @@ const InteractiveAttatchments = ({ currentLoan }) => {
                 )}
               </Box>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={6}>
               <Box display={"flex"} flexDirection={"column"} gap={4}>
                 {/* Borrower's Signature */}
                 <Typography

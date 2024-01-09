@@ -28,13 +28,13 @@ function ElibiblityLayerTable({ currentLoan }) {
 </TableRow>
 </TableHead>
       {totalAppliedLayers.map((layer,index)=>(
-        <>
+        <React.Fragment key={index} >
           {/* <TableHead >
   <TableRow >
     <TableCell sx={{fontWeight:'700',borderBottom:"none",fontSize:16,color:'secondary.dark'}}   colSpan={12} align="left">{layer.title}</TableCell>
   </TableRow>
 </TableHead> */}
-<TableBody>
+<TableBody  >
 <TableRow sx={{bgcolor:'#fff'}}>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} rowSpan={2}>{layer.title}</TableCell>
   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} align="center" rowSpan={2}>{currentLoan.title}</TableCell>
@@ -47,13 +47,13 @@ function ElibiblityLayerTable({ currentLoan }) {
 </TableRow>
 {activeLoansDeductions.map(activeLoan=>(  
   activeLoan.activeDeductedLayer==layer.title&&
-  <TableRow >
+  <TableRow key={activeLoan} >
   <TableCell sx={{fontWeight:'600',}}>Active</TableCell>
   <TableCell sx={{fontWeight:'600',color:'red',border:'1px solid lightgray'}}>{activeLoan.activeDeductedAmount}</TableCell>
 </TableRow>
 ))}
 </TableBody>
-        </>
+        </React.Fragment>
       ))}
     </Table>
   </TableContainer>
@@ -61,32 +61,3 @@ function ElibiblityLayerTable({ currentLoan }) {
 }
 
 export default ElibiblityLayerTable;
-
-// {/* <TableBody>
-// <TableRow
-//   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-// >
-//   <TableCell sx={{fontWeight:'600'}} component="th" scope="row">
-//     Requested 
-//   </TableCell>
-//   <TableCell sx={{fontWeight:'600',}} align="left">{currentLoan.title}</TableCell>
-//   <TableCell sx={{fontWeight:'600'}} align="left">{layer.deductedAmount}</TableCell>
-//   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} rowSpan={2} align="center">{layer.totalInterestApplied.toFixed(3)}</TableCell>
-//   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} rowSpan={2} align="center"> {layer.interestRate*100} %</TableCell>
-//   <TableCell sx={{fontWeight:'600',border:'1px solid lightgray'}} rowSpan={2} align="center">{layer.min+" "} - {" "+layer.max}</TableCell>
-//   <TableCell sx={{fontWeight:'600',color:'red'}} rowSpan={2} align="center" >{activeLoansDeductions[index]?.activeDeductedAmount||'0'} JD</TableCell>
-//   {/* <TableCell sx={{fontWeight:'600'}} align="left">{activeLoansDeductions[title]&&activeLoansDeductions[layer.title]===layer.title?`${activeLoansDeductions[title]} JD`:'0 JD'}</TableCell> */}
-// </TableRow>
-// {activeLoansDeductions.map(activeDeduction=>(
-// activeDeduction.activeDeductedLayer===layer.title?  
-// <TableRow
-//   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-// >
-//   <TableCell sx={{fontWeight:'600'}} component="th" scope="row">
-//     Active
-//   </TableCell>
-//   <TableCell sx={{fontWeight:'600'}} align="left">{activeLoansDeductions[index]?.activeDeductedType}</TableCell>
-//  <TableCell sx={{fontWeight:'600'}} align="left">{activeLoansDeductions[index]?.activeDeductedAmount}</TableCell>
-// </TableRow>
-// :null))}
-// </TableBody> */}

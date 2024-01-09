@@ -9,7 +9,7 @@ import {
   FormHelperText,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import ActiveLoanForm from "../ActiveLoanForm";
 import LoanDetails from "../LoanDetails";
 import LoanTypes from "../LoanTypes";
@@ -18,7 +18,7 @@ import MonthsSlider from "../loansSlider/MonthsSlider";
 import AmountSlider from "../loansSlider/AmountSlider";
 import calculateEMI from "../../utils/utils";
 import "../../assets/styles.css";
-import { TransitionGroup } from "react-transition-group";
+import LoanTypesSlider from "../mobile/MobileLoanTypes";
 
 function LoanInformation({
   currentLoan,
@@ -37,7 +37,7 @@ function LoanInformation({
   useEffect(() => {
     setCurrentLoan((prev) => ({ ...prev }));
   }, []);
-  const validateGreaterThanSalary = (value, type) => {
+  const validateGreaterThanSalary = () => {
     let {
       loanAmount,
       numberOfMonths,
@@ -48,28 +48,27 @@ function LoanInformation({
     } = currentLoan;
     if (numberOfMonths && loanAmount && currentSalary) {
       loanAmount = Number(loanAmount);
-      let { payPerMonth, EMI } = calculateEMI(
+      let { isEligible } = calculateEMI(
         loanAmount,
         intrestRates,
         numberOfMonths,
         currentLoan.title,
-        activeLoans
+        activeLoans,
+        currentSalary
       );
-      const halfSalary = currentSalary / 2;
-      const isEligible = payPerMonth <= halfSalary;
-
       if (isEligible) {
         return true;
       } else {
         for (let i = numberOfMonths; i < maxMonths; i++) {
-          let { payPerMonth } = calculateEMI(
+          let { isEligible } = calculateEMI(
             loanAmount,
             intrestRates,
             i,
             currentLoan.title,
-            activeLoans
+            activeLoans,
+            currentSalary
           );
-          if (payPerMonth <= halfSalary) {
+          if (isEligible) {
             // console.log(
             //   `found pay per month is ${i} and pay per month ${
             //     EMI / i
@@ -84,26 +83,51 @@ function LoanInformation({
       return "You Arent Eligiable for this Amount";
     }
   };
+  function handleChangeCurrentLoan(title) {
+    const targetLoan = loans.find((e) => e.title === title);
+    setCurrentLoan(targetLoan);
+  }
   const isMobile = useMediaQuery("(max-width:600px)");
   return (
-    <Grid container alignItems={"flex-start"} spacing={10}>
-      <Grid container alignItems={"center"} item sm={12} md={6} gap={4}>
+    <Grid
+      container
+      sx={{ height: "calc(100% + 200px)" }}
+      alignItems={"flex-start"}
+      spacing={10}
+    >
+      <Grid
+        container
+        alignItems={"center"}
+        sx={{
+          textAlign: { xs: "center", md: "left" },
+        }}
+        item
+        sm={12}
+        md={6}
+        gap={4}
+      >
         <Grid container item md={12} gap={4}>
-          <Grid item md={12}>
-            <Typography
-              textAlign={isMobile ? "center" : "start"}
-              variant="h5"
-              fontWeight={"600"}
-            >
+          <Grid item xs={12} md={12}>
+            <Typography variant="h5" fontWeight={"600"}>
               I want to apply
             </Typography>
           </Grid>
           <Grid container item justifyContent={"space-between"} md={10} lg={12}>
-            <LoanTypes
-              currentLoan={currentLoan}
-              setCurrentLoan={setCurrentLoan}
-              loans={loans}
-            />
+            {isMobile ? (
+              <LoanTypesSlider
+                currentLoan={currentLoan}
+                setCurrentLoan={setCurrentLoan}
+                loans={loans}
+                handleChangeCurrentLoan={handleChangeCurrentLoan}
+              />
+            ) : (
+              <LoanTypes
+                currentLoan={currentLoan}
+                setCurrentLoan={setCurrentLoan}
+                loans={loans}
+                handleChangeCurrentLoan={handleChangeCurrentLoan}
+              />
+            )}
           </Grid>
         </Grid>
         <Grid container item sm={12} md={10} lg={12} spacing={4} gap={4}>
@@ -233,9 +257,11 @@ function LoanInformation({
           </Grid>
         )}
       </Grid>
-      <Grid container alignItems={"center"} item md={6}>
-        <LoanDetails currentLoan={currentLoan} />
-      </Grid>
+      {!isMobile && (
+        <Grid container alignItems={"center"} item md={6}>
+          <LoanDetails currentLoan={currentLoan} />
+        </Grid>
+      )}
     </Grid>
   );
 }

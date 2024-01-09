@@ -35,7 +35,7 @@ function LoanAttatchmentsPreview({
     }
   }
   return (
-    <Grid container item p={4} gap={4} sx={glassmorphismStyle}>
+    <Grid container justifyContent={{xs:"center",md:"flex-start"}} item p={4} gap={4} sx={glassmorphismStyle}>
       <Grid item md={12}>
         <Typography variant="h6" textAlign={"center"}>
           {attatchments.length > 0
@@ -64,6 +64,7 @@ function LoanAttatchmentsPreview({
                   item
                   p={1}
                   borderRadius={"15px"}
+                  justifyContent={{xs:"center",md:"start"}}
                   md={12}
                 >
                   {uploadProgress.finished && isSuccessful && (
@@ -113,7 +114,7 @@ function LoanAttatchmentsPreview({
                     container
                     sx={{ cursor: "pointer" }}
                     onClick={() => handleDeleteAttatchment(file.name)}
-                    justifyContent={"flex-end"}
+                    justifyContent={{xs:'center',md:"flex-end"}}
                     item
                     md={1}
                   >

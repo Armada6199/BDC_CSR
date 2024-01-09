@@ -52,8 +52,8 @@ function Documents({
     }
   }
   return (
-    <Grid container alignItems={"flex-start"} spacing={12}>
-      <Grid container item md={6} spacing={12}>
+    <Grid container sx={{ height: "calc(100% + 300px)" }} alignItems={"flex-start"} spacing={12}>
+      <Grid container justifyContent={{textAlign:{xs:'center',md:"start"},xs:"center",md:"flex-start"}} item md={6} spacing={12}>
         <Grid item md={12}>
           <Typography variant="h5" fontWeight="700" color={"gray"}>
             Attatchments

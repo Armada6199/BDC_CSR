@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -7,8 +7,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -19,39 +19,40 @@ ChartJS.register(
   Legend
 );
 
+const labels = ["First Layer", "Second Layer", "Third Layer", "Forth Layer"];
 
-
-const labels = ['First Layer', 'Second Layer', 'Third Layer', 'Forth Layer'];
-
-export function CustomBarChat({totalAppliedLayers,maxAmount}) {
- const options = {
-  
+export function CustomBarChat({ totalAppliedLayers }) {
+  const lastIncludedLayer = totalAppliedLayers[totalAppliedLayers.length - 1];
+  const maxAmount =
+    lastIncludedLayer.totalInterestApplied + lastIncludedLayer.max;
+  const options = {
+    maintainAspectRatio: false,
     scales: {
       x: {
         stacked: true,
-        beginAtZero:true
+        beginAtZero: true,
       },
       y: {
         stacked: true,
-        min:0,
-        max:maxAmount
+        min: 0,
+        max: maxAmount,
       },
     },
   };
-   const data = {
+  const data = {
     labels,
     datasets: [
       {
-        label: 'Total Applied',
-        data:totalAppliedLayers.map(ele=>ele.deductedAmount),
-        backgroundColor: '#215190',
+        label: "Total Applied",
+        data: totalAppliedLayers.map((ele) => ele.deductedAmount),
+        backgroundColor: "#215190",
       },
       {
-        label: 'Applied Interests',
-        data: totalAppliedLayers.map(ele=>ele.totalInterestApplied),
-        backgroundColor: '#C4B28F',
+        label: "Applied Interests",
+        data: totalAppliedLayers.map((ele) => ele.totalInterestApplied),
+        backgroundColor: "#C4B28F",
       },
     ],
   };
-  return <Bar height={'100%'} width={'100%'} options={options} data={data} />;
+  return <Bar height={"100%"} width={"100%"} options={options} data={data} />;
 }

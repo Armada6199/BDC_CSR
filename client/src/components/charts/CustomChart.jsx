@@ -5,30 +5,28 @@ import { Doughnut } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip);
 
 
-export default function CustomChart({totalAppliedLayers}) {
-  const appliedInterests=totalAppliedLayers.map(ele=>{
-    return ele.totalInterestApplied;
-  })
-  const titles=totalAppliedLayers.map(ele=>{
-    return ele.title;
-  })
+export default function CustomChart({interestPayable,loanAmount}) {
+  // const appliedInterests=totalAppliedLayers.map(ele=>{
+  //   return ele.totalInterestApplied;
+  // })
+  // const titles=totalAppliedLayers.map(ele=>{
+  //   return ele.title;
+  // })
+  console.log(interestPayable,loanAmount)
   const data = {
-    labels: titles,
+    labels: ['Original Loan Amount','Intersts'],
     datasets: [
       {
-        label: 'Interests',
-        data: appliedInterests,
+        label: 'EMI Details',
+        data: [interestPayable,loanAmount],
         backgroundColor: [
           '#215190',
           '#C4B28F',
-          '#637E76',
-          '#371E30'
+         
         ],
         borderColor: [
           '#215190',
           '#C4B28F',
-          '#637E76',
-          '#371E30'
         ],
         borderWidth: 1,
       },

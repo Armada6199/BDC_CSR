@@ -1,21 +1,22 @@
-import { Box, Grid, Typography, Modal, TextField,Checkbox,FormControlLabel,Button } from "@mui/material";
+import { Box, Grid, Typography, Modal, TextField,Checkbox,FormControlLabel,Button, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import { glassmorphismStyle } from "../assets/styles";
 import HeaderTest from "../layout/HeaderTest";
 import FooterTest from "../layout/FooterTest";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
-import bankLogo from "../assets/Banque_du_caire_Logodark.svg";
 
 import "../assets/styles.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LoginModal from "../components/LoginModal";
 function LoginPage({setCurrentLoan}) {
+  const isMobile=useMediaQuery('(max-width:600)')
   const staffOrClientInnerContainerStyles = {
     ...glassmorphismStyle,
-    borderRadius: "0px",
-    borderTopRightRadius: "10px",
-    borderBottomRightRadius: "10px",
+    borderRadius: isMobile?"30px":'0px',
+    borderTopRightRadius: isMobile?'30px':"10px",
+    borderBottomRightRadius:  isMobile?'30px':"10px",
   };
   const [loginCredindtials,setLoginCredindtials]=useState({email:'',password:''});
   const [openStaff, setOpenStaff] = React.useState(false);
@@ -39,7 +40,7 @@ function LoginPage({setCurrentLoan}) {
   return (
     <Grid container height={"100vh"} item md={12}>
       <HeaderTest />
-      <Grid container md={12} item sx={{ height: "calc(100vh - 200px)" }}>
+      <Grid container md={12} item sx={{ height: {sm:'100%',md:"calc(100vh - 200px)"} }}>
         <Grid
           container
           item
@@ -47,6 +48,7 @@ function LoginPage({setCurrentLoan}) {
           position={"relative"}
           justifyContent={"center"}
           p={4}
+          maxHeight={'100%'}
           alignItems={"center"}
           className="loginBackground"
         >
@@ -85,26 +87,30 @@ function LoginPage({setCurrentLoan}) {
         <Grid
           container
           item
+          xs={12}
           md={5}
           justifyContent={"center"}
           bgcolor={"#f6f6f6"}
           alignItems={"center"}
-          gap={4}
+          gap={2}
+          p={4}
         >
-          <Grid item md={12}>
-            <Typography textAlign={"center"}  variant="h5" fontWeight={"600"}>
+          <Grid container item justifyContent={'center'} gap={{xs:4,xl:8}} xs={10}  md={12}>
+          <Grid item xs={10} md={12}>
+            <Typography  textAlign={"center"}  variant="h5" fontWeight={"600"}>
            Select one of the following options to continue
             </Typography>
           </Grid>
-          <Grid container item justifyContent={'center'} gap={8} md={12}>
           <Grid
             container
             item
+            xs={12}
             md={8}
             onClick={handleOpenStaffLogin}
             sx={{ cursor: "pointer",...glassmorphismStyle,boxShadow: '-3px 7px 6px -5px rgba(0,0,0,0.37)',border:"none"}}
             minHeight={'120px'}
-            maxHeight={"40%"}
+            height={{xs:'120px'}}
+            maxHeight={{md:"40%"}}
           >
             <Grid
               container
@@ -112,7 +118,7 @@ function LoginPage({setCurrentLoan}) {
               alignItems={"center"}
               bgcolor={"#F58232"}
               item
-              sx={{borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px'}}
+              sx={{md:{borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px'}}}
               md={4}
               
             >
@@ -125,6 +131,7 @@ function LoginPage({setCurrentLoan}) {
               alignItems={"center"}
               container
               item
+              xs={12}
               md={8}
             >
               <Typography variant="h6" fontWeight={"500"}>
@@ -137,6 +144,7 @@ function LoginPage({setCurrentLoan}) {
             item
             md={8}
             minHeight={'120px'}
+            height={{xs:'120px'}}
             maxHeight={"40%"}
             onClick={()=>navigate('loan')}
             sx={{ cursor: "pointer",...glassmorphismStyle,boxShadow: '-3px 7px 6px -5px rgba(0,0,0,0.37)',border:"none"}}
@@ -148,7 +156,7 @@ function LoginPage({setCurrentLoan}) {
               bgcolor={"#F58232"}
               item
               md={4}
-              sx={{borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px'}}
+              sx={{md:{borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px'}}}
             >
               <Person2OutlinedIcon sx={{ fontSize: 75, color: "white" }} />
             </Grid>
@@ -158,7 +166,6 @@ function LoginPage({setCurrentLoan}) {
               alignItems={"center"}
               item
               md={8}
-              sx={staffOrClientInnerContainerStyles}
             >
               <Typography variant="h6" fontWeight={"500"}>
                 Apply as a Client
@@ -182,65 +189,8 @@ function LoginPage({setCurrentLoan}) {
           border: "none",
         }}
       >
-        <Grid
-          container
-          item
-          md={5}
-          p={4}
-          justifyContent={"center"}
-          gap={4}
-          sx={glassmorphismStyle}
-          height={'65vh'}
-        >
-          <Grid item md={12} >
-            <Box
-              component={"img"}
-              width={"100%"}
-              height={"80px"}
-              src={bankLogo}
-            />
-          </Grid>
-          <Grid item md={12}>
-            <Typography textAlign={"center"} variant="h4" fontWeight={"600"}>
-              Hi,Welcome Back
-            </Typography>
-          </Grid>
-          <Grid item md={12}>
-            <Typography
-              textAlign={"center"}
-              variant="h6"
-              color={"gray"}
-              fontWeight={"600"}
-            >
-              Enter your credentials to continue
-            </Typography>
-          </Grid>
-          <Grid container item md={8} gap={4}>
-            <Grid item md={12}>
-              <TextField fullWidth label="Email" onChange={(e)=>setLoginCredindtials(prev=>({...prev,email:e.target.value}))} type="email" variant="outlined" />
-            </Grid>
-            <Grid item md={12}>
-              <TextField fullWidth label="Password" type="password" onChange={(e)=>setLoginCredindtials(prev=>({...prev,password:e.target.value}))} variant="outlined" />
-            </Grid>
-            <Grid container item md={12} alignItems={'center'}>
-            <Grid item md={6}>
-            <FormControlLabel control={<Checkbox
-            sx={{
-                color: "#215190",
-                "&.Mui-checked": {  
-                  color: "#F58232",
-                },
-              }}
-            defaultChecked />} label="Remember Me" />
-            </Grid>
-            <Grid item md={6}>
-            <Typography fontWeight={'600'} textAlign={'end'}>Forgot Passowrd ?</Typography>
-            </Grid>
-            </Grid>
-            <Grid item md={12}>
-                <Button fullWidth onClick={handleLogin} variant="contained" sx={{bgcolor:'#F58232'}}>Login</Button>
-            </Grid>
-          </Grid>
+        <Grid container item xs={12} md={6} xl={4} margin={'auto'} >
+        <LoginModal handleCloseStaffLogin={handleCloseStaffLogin} setLoginCredindtials={setLoginCredindtials} handleLogin={handleLogin}/>
         </Grid>
       </Modal>
     </Grid>

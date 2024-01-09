@@ -1,6 +1,5 @@
-import { Button, Grid, Typography, Modal, Box } from "@mui/material";
-import React, { useState } from "react";
-import PreviewIcon from "@mui/icons-material/Preview";
+import { Button, Grid, Typography, Modal, Box, useMediaQuery, Divider } from "@mui/material";
+import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { glassmorphismStyle } from "./assets/styles";
@@ -9,42 +8,48 @@ import ClearIcon from "@mui/icons-material/Clear";
 import SaveIcon from "@mui/icons-material/Save";
 import GestureIcon from "@mui/icons-material/Gesture";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
-import Link from "@mui/material/Link";
-import './assets/styles.css'
+import "./assets/styles.css";
 function DocumentToolbar({
   handleAddSignature,
   handleDownloadDocument,
   zoomState,
   decreaseZoom,
   increaseZoom,
-  pdfString,
   handleOpen,
   handleClose,
   openModal,
-  downloading
+  downloading,
 }) {
-  
   const clear = () => sigPad.clear();
   let sigPad = {};
+  const isMobile=useMediaQuery('(max-width:600px)')
   return (
     <Grid
-      width={"100%"}
       position={"sticky"}
       top={"0"}
       right={"0"}
       item
-      md={12}
-      spacing={12}
+      xs={12}
+      spacing={2}
+      height={"50px"}
+      maxHeight={"50px"}
       sx={{
         ...glassmorphismStyle,
         borderBottomLeftRadius: "10px",
         borderBottomRightRadius: "10px",
         borderRadius: "0",
-        bgcolor:'#f3f3f3'
+        bgcolor: "#f3f3f3",
       }}
     >
-      <Grid container  item md={12} justifyContent={'space-between'}>
-        <Grid container justifyContent={'space-around'} alignItems={"center"} item md={2}>
+      <Grid container item xs={12} justifyContent={"space-between"}>
+        <Grid
+          container
+          justifyContent={"space-around"}
+          alignItems={"center"}
+          item
+          xs={6}
+          md={2}
+        >
           <Box
             display={"flex"}
             justifyContent={"center"}
@@ -66,7 +71,9 @@ function DocumentToolbar({
             />
           </Box>
           <Grid item md={4}>
-            <Typography fontWeight={'600'} textAlign={"center"}>{zoomState}%</Typography>
+            <Typography fontWeight={"600"} textAlign={"center"}>
+              {zoomState}%
+            </Typography>
           </Grid>
           <Box
             display={"flex"}
@@ -89,66 +96,46 @@ function DocumentToolbar({
             />
           </Box>
         </Grid>
-        <Grid container item justifyContent={'flex-end'} md={8}>
-        {/* <Grid item md={2}>
-          <Button
-            sx={{
-              fontWeight: "600",
-              ":hover": { backgroundColor: "secondary.light" },
-            }}
-            startIcon={<PreviewIcon />}
+        <Grid container item justifyContent={"flex-end"} spacing={2} xs={4} md={4}>
+          <Grid item xs={6} md={6}>
+            <Button
             fullWidth
-            variant="text"
-            onClick={() => {
-              var pdf_newTab = window.open("");
-
-              pdf_newTab.document.write(
-                `<html><head><title>Loan Agreement</title></head><body><iframe title='Loan Agreement' style="border:none"  width='100%' height='100%' src='data:application/pdf;base64,${pdfString}#toolbar=1&view=Fit'></iframe></body></html>`
-              );
-            }}
-          >
-            Preview
-          </Button>
-        </Grid> */}
-        <Grid item md={2}>
-          <Button
-            sx={{
-              fontWeight: "600",
-              ":hover": { backgroundColor: "secondary.light" },
-            }}
-            onClick={handleOpen}
-            startIcon={<GestureIcon />}
-            fullWidth
-            variant="text"
-          >
-            SIGN
-          </Button>
+              sx={{
+                fontWeight: "600",
+                ":hover": { backgroundColor: "secondary.light" },
+              }}
+              onClick={handleOpen}
+              startIcon={<GestureIcon />}
+              variant="text"
+            >
+              {isMobile?'':'SIGN'}
+            </Button>
+          </Grid>
+          <Grid container alignItems={"center"} item xs={6} md={6}>
+            <Grid item xs={12} md={2}>
+              {downloading ? (
+                <Grid container justifyContent={'center'} item xs={12}>
+                  <div className="download_loader"></div>
+                </Grid>
+              ) : (
+                <Button
+                fullWidth
+                  sx={{
+                    fontWeight: "600",
+                    ":hover": { backgroundColor: "secondary.light" },
+                  }}
+                  disabled={downloading}
+                  onClick={() => handleDownloadDocument(sigPad)}
+                  startIcon={<SaveAltIcon />}
+                  variant="text"
+                  
+                >
+                  {isMobile?'':'DOWNLOAD'}
+                </Button>
+              )}
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid container alignItems={'center'} item md={2}>
-       {downloading&&
-        <Grid item md={2}>
-           <div class="download_loader"></div>
-       </Grid>}
-       <Grid item md={8}>
-       <Button
-            fullWidth
-            sx={{
-              fontWeight: "600",
-              ":hover": { backgroundColor: "secondary.light" },
-            }}
-            disabled={downloading}
-            onClick={() => handleDownloadDocument(sigPad)}
-            startIcon={<SaveAltIcon />}
-            variant="text"
-          >
-          
-            DOWNLOAD
-          </Button>
-       </Grid>
-      
-        </Grid>
-        </Grid>
-     
       </Grid>
       <Modal
         open={openModal}
@@ -162,63 +149,56 @@ function DocumentToolbar({
           border: "none",
         }}
       >
-        <Grid
-          sx={{ ...glassmorphismStyle}}
-          container
-          item
-          md={6}
- 
-        >
-          <Grid container item md={12} height={'100%'} gap={4} p={4}>
-          <Grid item md={12}>
-            <Typography variant="h6" textAlign={"center"}>
-              Kindly Add Your Signature
-            </Typography>
-          </Grid>
-          <Grid container className="sigContainer" item md={12}>
-            <ReactSignatureCanvas
-              penColor="#215190"
-              ref={(ref) => {
-                sigPad = ref;
-              }}
-              canvasProps={{ className: "sigPad" }}
-            />
-          </Grid>
-          <Grid container item md={12} spacing={4}>
-            <Grid item md={6}>
-              <Button
-                onClick={clear}
-                sx={{
-                  color: "#215190",
-                  fontWeight: "700",
-                  borderColor: "#215190",
-                }}
-                startIcon={<ClearIcon />}
-                fullWidth
-                variant="outlined"
-              >
-                Clear
-              </Button>
+        <Grid sx={{ ...glassmorphismStyle,textAlign:'center' }} container  item md={6}>
+          <Grid container item md={12} height={"100%"} gap={4} p={4}>
+            <Grid item xs={12}>
+              <Typography variant="h6" >
+                Kindly Add Your Signature
+              </Typography>
             </Grid>
-            <Grid item md={6}>
-              <Button
-                onClick={() => handleAddSignature(sigPad)}
-                sx={{
-                  fontWeight: "600",
-                  bgcolor: "#C4B28F",
-                  color: "primary.main",
-                  ":hover": { backgroundColor: "secondary.dark" },
+            <Grid container className="sigContainer" item xs={12}>
+              <ReactSignatureCanvas
+                penColor="#215190"
+                ref={(ref) => {
+                  sigPad = ref;
                 }}
-                startIcon={<SaveIcon />}
-                fullWidth
-                variant="contained"
-              >
-                Save
-              </Button>
+                canvasProps={{ className: "sigPad" }}
+              />
+            </Grid>
+            <Grid container item xs={12} justifyContent={'center'} spacing={4}>
+              <Grid item md={6}>
+                <Button
+                  onClick={clear}
+                  sx={{
+                    color: "#215190",
+                    fontWeight: "700",
+                    borderColor: "#215190",
+                  }}
+                  startIcon={<ClearIcon />}
+                  fullWidth
+                  variant="outlined"
+                >
+                  Clear
+                </Button>
+              </Grid>
+              <Grid item md={6}>
+                <Button
+                  onClick={() => handleAddSignature(sigPad)}
+                  sx={{
+                    fontWeight: "600",
+                    bgcolor: "#C4B28F",
+                    color: "primary.main",
+                    ":hover": { backgroundColor: "secondary.dark" },
+                  }}
+                  startIcon={<SaveIcon />}
+                  fullWidth
+                  variant="contained"
+                >
+                  Save
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
-          </Grid>
-        
         </Grid>
       </Modal>
     </Grid>

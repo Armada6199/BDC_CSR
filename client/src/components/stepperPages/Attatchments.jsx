@@ -92,10 +92,10 @@ import {
     }
     return pdfString.length > 0 ? (
       <Grid container item minHeight={"75vh"} spacing={12}>
-        <Grid item md={6}>
-          <Box className="attatchments_sticky">
-            <Grid  container spacing={4} item md={12}>
-            <Grid item md={12}>
+        <Grid container  bgcolor={'red'} item md={6}>
+          <Box  className="attatchments_sticky">
+            <Grid  container sx={{textAlign:{xs:'center',md:'start'}}} justifyContent={{xs:"center",md:"flex-start"}} spacing={4} item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h5" fontWeight="700" color={"gray"}>
                 Attatchments
               </Typography>
