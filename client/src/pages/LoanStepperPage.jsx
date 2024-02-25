@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
@@ -7,12 +7,12 @@ import StepperComponentsHOC from "../components/StepperComponentsHOC.jsx";
 import { useForm } from "react-hook-form";
 import calculateEMI from "../utils/utils.js";
 import StepperNavigationButtons from "../components/StepperNavigationButtons.jsx";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import MobileStepper from "@mui/material/MobileStepper";
 import axios from "axios";
 import { loanDetailsData } from "../assets/loans.jsx";
-import '../assets/styles.css'
+import "../assets/styles.css";
+import UserService from "../hooks/KeycloakProvider.js";
 const steps = [
   "1. Load information",
   "2. Loan Eligibility ",
@@ -133,6 +133,7 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
     setCurrentLoan(loans[0]);
     setActiveStep(0);
   };
+
   return (
     <form noValidate onSubmit={handleSubmit(handleNext)}>
       <Grid
@@ -167,7 +168,7 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
                     steps={steps.length}
                     position="static"
                     activeStep={activeStep}
-                    classes={{ dotActive: 'progress_active' }}
+                    classes={{ dotActive: "progress_active" }}
                     sx={{
                       width: "100%",
                       flexGrow: 1,
@@ -175,14 +176,11 @@ function LoanStepperPage({ currentLoan, setCurrentLoan }) {
                       ".MuiMobileStepper-progress": {
                         width: "100%",
                         backgroundColor: "secondary.dark",
-                      }
+                      },
                     }}
                     style={{
-                      backgroundColor: '#f0f0f0', // Set a background color for the progress bar
+                      backgroundColor: "#f0f0f0", // Set a background color for the progress bar
                     }}
-                    
-                 
-                  
                   />
                 </Grid>
               </Grid>

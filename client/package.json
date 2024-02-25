@@ -16,6 +16,8 @@
     "dayjs": "^1.11.10",
     "downloadjs": "^1.4.7",
     "events": "^3.3.0",
+    "keycloak-js": "^23.0.7",
+    "keycloak-react-web": "^0.1.19",
     "nodemon": "^3.0.2",
     "normalize.css": "^8.0.1",
     "pdfjs-dist": "^4.0.269",

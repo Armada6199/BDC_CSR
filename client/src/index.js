@@ -1,62 +1,75 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import { ThemeProvider } from '@emotion/react';
-import { Box, createTheme } from '@mui/material';
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import { ThemeProvider } from "@emotion/react";
+import { createTheme } from "@mui/material";
+import "./index.css";
+import UserService from "./services/UserService.js";
+import axios from "axios";
 const theme = createTheme({
-  direction: 'ltr',
+  direction: "ltr",
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          height:'50px',
-        
+          height: "50px",
         },
-        '&:hover': {
-          backgroundColor: 'secondary.light !important'
-        }
+        "&:hover": {
+          backgroundColor: "secondary.light !important",
+        },
       },
-      
     },
   },
   typography: {
     fontFamily: [
-      'DM Sans',
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "DM Sans",
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
+    ].join(","),
   },
   palette: {
     primary: {
-      main:'#1A191E',
-      bluish:'#215190'
+      main: "#1A191E",
+      bluish: "#215190",
     },
-    secondary:{
-      main:'#C4B28F',
-      dark:'#b0a080',
-      light:"#D5C9B0",
+    secondary: {
+      main: "#C4B28F",
+      dark: "#b0a080",
+      light: "#D5C9B0",
     },
     background: {
-      default: "#F1F3F4"
+      default: "#F1F3F4",
     },
     // secondary: purple,
   },
-
 });
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+const _axios = axios.create({
+  baseURL: "http://localhost:3001/",
+});
+_axios.interceptors.request.use((config) => {
+  if (UserService.isLoggedIn()) {
+    const cb = () => {
+      config.headers.Authorization = `Bearer ${UserService.getToken()}`;
+      return Promise.resolve(config);
+    };
+    return UserService.updateToken(cb);
+  }
+});
+const root = ReactDOM.createRoot(document.getElementById("root"));
+const renderApp = root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-       <App />
+      <App />
     </ThemeProvider>
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
+
+UserService.initKeycloak(renderApp);
